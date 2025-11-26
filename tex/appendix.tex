@@ -1,12 +1,93 @@
 \section{Annexes}
 
 \subsection{Scripts et programmes}
-\placeholder{Inclure ou référencer les scripts C/Matlab/Python utilisés pour les calculs matriciels.}
-\begin{lstlisting}[style=codeblock,caption={Exemple d'invocation du module ASD2},label={lst:example}]
-// TODO: replace with the real code or a minimal reproducible snippet
-int main(void) {
-  // load the 27x27 matrix from input_data/matrix.txt
-  // propagate Pi(n) and export the results
+
+\begin{lstlisting}[style=codeblock,caption={Fonctions de calcul de la distribution pour une étape, puis t étapes},label={lst:example}]
+/**
+ * @brief  Effectue une etape de distribution : pi1 = pi0 * M
+ *
+ * Les vecteurs `pi0` et `pi1` sont de taille `M->n`
+ *
+ * @param[in]  pi0  Distribution initiale (taille n)
+ * @param[in]  M    Matrice de transition n x n (lignes = etats de depart)
+ * @param[out] pi1  Distribution resultante (taille n)
+ */
+void dist_step(const float *pi0, const t_matrix *M, float *pi1) {
+    if (!M || !M->a || M->n <= 0 || !pi0 || !pi1) {
+        fprintf(stderr, "[matrix][ERR] Parametres invalides dans dist_step\n");
+        exit(EXIT_FAILURE);
+    }
+
+    int size = M->n;
+
+    // Calcul de pi1 = pi0 * M
+    for (int col = 0; col < size; ++col) {
+        float sum = 0.0f;
+        for (int row = 0; row < size; ++row) {
+            sum += pi0[row] * M->a[row][col];
+        }
+        pi1[col] = sum;
+    }
+}
+
+  /**
+ * @brief  Calcule Pi_t = Pi_0 M^t par iterations successives
+ *
+ * Utilise `dist_step` de maniere repete pour appliquer `t` transitions.
+ * Si `t == 0`, la fonction recopie simplement `pi_0` dans `pi_t`.
+ *
+ * @param[in]  pi0  Distribution initiale (taille n)
+ * @param[in]  M    Matrice de transition n x n
+ * @param[in]  t    Nombre d'etapes (t >= 0)
+ * @param[out] pit  Distribution apres t etapes (taille n)
+ */
+void dist_power(const float *pi0, const t_matrix *M, int t, float *pit) {
+    if (!M || !M->a || M->n <= 0 || !pi0 || !pit || t < 0) {
+        fprintf(stderr, "[matrix][ERR] Parametres invalides dans dist_power\n");
+        exit(EXIT_FAILURE);
+    }
+
+    int size = M->n;
+
+    // Cas trivial : t == 0 => copie directe
+    if (t == 0) {
+        for (int index = 0; index < size; ++index) {
+            pit[index] = pi0[index];
+        }
+        return;
+    }
+
+    // Allocation de deux vecteurs temporaires pour les etapes
+    float *current = (float *)malloc((size_t)size * sizeof(float));
+    float *next = (float *)malloc((size_t)size * sizeof(float));
+    if (!current || !next) {
+        perror("malloc");
+        free(current);
+        free(next);
+        exit(EXIT_FAILURE);
+    }
+
+    // Init distribution courante
+    for (int index = 0; index < size; ++index) {
+        current[index] = pi0[index];
+    }
+
+    // Iterations successives pour t etapes
+    for (int step = 0; step < t; ++step) {
+        dist_step(current, M, next);
+
+        float *tmp = current;
+        current = next;
+        next = tmp;
+    }
+
+    // Copie du resultat final dans pit
+    for (int index = 0; index < size; ++index) {
+        pit[index] = current[index];
+    }
+
+    free(current);
+    free(next);
 }
 \end{lstlisting}
 

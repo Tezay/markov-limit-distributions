@@ -1,21 +1,24 @@
 \section{Introduction}
 
 \subsection{Contexte}
-Ce projet s'inscrit dans le cours de probabilités (SM301) et vise à étudier le comportement à long terme de chaînes de Markov finies. Nous analyserons une chaîne particulière de 27 états et la mobilisation des concepts de classes communicantes, distributions stationnaires et distributions limites.
+Ce projet s'inscrit dans le cours de probabilités (SM301) et vise à étudier le comportement à long terme de chaînes de Markov finies.
+Nous analyserons une chaîne particulière de 27 états et la mobilisation des concepts de classes communicantes, distributions stationnaires et distributions limites.
 
-% A compléter
-\placeholder{Présenter brièvement l'intérêt applicatif des chaînes de Markov et les liens avec le cours d'Algorithmique et Structure de données 2.}
+Nous avons déjà abordé les fondements théoriques des chaînes de Markov lors d'un précédent projet dans le module d'Algorithmique et Structure de données 2 au travers de simulations numériques, et ce projet permettra de mettre en pratique ces notions et résultats.
+
+Les chaînes de Markov sont des modèles probabilistes largement utilisés en sciences, ingénierie et économie pour modéliser des systèmes évoluant de manière aléatoire dans le temps.
+Comprendre leur comportement à long terme est crucial pour diverses applications, telles que la modélisation des files d'attente, les algorithmes de recommandation, PageRank de Google, routage dans les réseaux etc.
+\parencite{veritasiumMarkov2025}
 
 \subsection{Objectifs du projet}
 \begin{itemize}[label=\textbullet]
   \item Explorer expérimentalement une chaîne de Markov à 27 états (questions 1 à 7).
   \item Interpréter les résultats à l'aide des notions théoriques (questions 8 à 10).
   \item Aller plus loin avec des preuves et des analyses complémentaires (questions 11 à 14).
-  \item Produire un rapport concis (20 pages max) et une présentation orale de 10--15 minutes.
 \end{itemize}
 
 \subsection{Organisation du rapport}
-Chaque partie du document correspond aux sections de l'énoncé fourni. Les questions sont regroupées pour faciliter la rédaction progressive et la validation des résultats.
+Chaque partie du document correspond aux sections de l'énoncé fourni. Les questions sont regroupées pour faciliter la correction et validation des résultats.
 \begin{itemize}[label=\textbullet]
   \item \textbf{Exploration numérique} : implémentations et sorties expérimentales sur la chaîne de 27 états.
   \item \textbf{Explication théorique} : concepts clés (accessibilité, classes, période, distributions stationnaires/limites).
@@ -25,14 +28,13 @@ Chaque partie du document correspond aux sections de l'énoncé fourni. Les ques
 
 \subsection{Jeu de données et ressources}
 \begin{itemize}[label=\textbullet]
-  \item \textbf{Matrice de transition} : fichier texte \texttt{input\_data/matrix.txt} fourni (même format que le projet ASD2).
-  \item \textbf{Schéma d'exemple} : \texttt{images/matrix\_proba.pdf} disponible pour illustrer une structure de transitions.
-  \item \textbf{Programmes} : réutiliser le module \texttt{matrix.c/matrix.h} ou équivalent (ASD2) pour les calculs \parencite{markovGraphAnalyzer2025}.
+  \item \textbf{Matrice de transition} : fichier texte \texttt{input\_data/matrix.txt} fourni.
+  \item \textbf{Programme} : nous avons utilisé le programme développé pour le projet d'Algorithmique et Structure de Données 2 pour l'analyse de la matrice de transition \parencite{markovGraphAnalyzer2025}.
 \end{itemize}
 
 \subsection{Méthodologie proposée}
 \begin{itemize}[label=\textbullet]
-  \item Automatiser les simulations (Python/Matlab/C) pour générer les vecteurs de probabilité et les graphes de convergence.
+  \item Automatiser les simulations (en C) pour générer les vecteurs de probabilité et les graphes de convergence.
   \item Documenter chaque configuration initiale et paramètre exploré.
   \item Conserver les figures et résultats bruts pour relecture en annexe, et ne garder dans le corps du texte que les visualisations synthétiques.
 \end{itemize}
