@@ -1,7 +1,5 @@
 # Projet de Probabilités – Chaînes de Markov (SM301)
 
-Ce dépôt fournit l'ossature LaTeX complète pour rédiger le rapport (20 pages max) et préparer la présentation orale sur les distributions limites des chaînes de Markov (énoncé : `Probability SM301 Project 2026.pdf`). Les contenus restent à renseigner, mais tout est prêt pour travailler dans VS Code ou en ligne de commande.
-
 ## Prérequis
 - TeX Live / MacTeX / MiKTeX avec `latexmk` et `biber`.
 - VS Code + extension **LaTeX Workshop** (optionnel mais pratique).
@@ -54,8 +52,10 @@ markov-limit-distributions/
 │   └── appendix.tex       # Annexes (code, figures)
 ├── references.bib         # Bibliographie BibLaTeX
 ├── images/                # Illustrations (ex. matrix_proba.pdf) + vos figures
-├── input_data/            # Données fournies (matrice 27×27)
-│   └── matrix.txt
+├── data/                  # Données
+│   ├── from_moodle/
+│   │   └── matrix.txt     # Fichier fourni (matrice 27x27)
+│   └── ...                # Fichiers d'output du programme markov-graph-analyzer pour répondre aux questions
 ├── out/                   # Fichiers générés par latexmk (PDF, aux, log)
 ├── .latexmkrc             # Configuration latexmk (sortie out/, biber)
 └── .vscode/settings.json  # VS Code LaTeX Workshop : sortie out/
