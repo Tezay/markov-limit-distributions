@@ -44,13 +44,3 @@ Depuis la racine :
 latexmk -pdf main.tex
 ```
 Avec LaTeX Workshop, assurez-vous que la commande utilise `latexmk` (le fichier `.latexmkrc` force la sortie dans `out/`).
-
-## Remplir le rapport
-1) Compléter les métadonnées dans `tex/titlepage.tex` et le résumé dans `tex/abstract.tex`.  
-2) Renseigner chaque question dans `tex/02_numerical_exploration.tex` (questions 1–7), `tex/03_explanation.tex` (questions 8–10), `tex/04_extended.tex` (questions 11–14) puis conclure dans `tex/05_conclusion.tex`.  
-3) Ajouter les scripts/figures en annexe (`tex/appendix.tex`, dossier `images/`).  
-4) Citer vos sources dans `references.bib` et \`\\parencite\` ou \`\\textcite\` dans le texte.
-
-## Rappels livrables
-- Rapport : 20 pages maximum, dépôt Moodle avant la date limite indiquée dans l'énoncé.
-- Présentation orale (10–15 min) : synthèse sur l'existence des distributions limites avec nouveaux exemples et exécution de vos programmes.
