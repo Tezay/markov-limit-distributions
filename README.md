@@ -6,14 +6,37 @@ Ce dépôt fournit l'ossature LaTeX complète pour rédiger le rapport (20 pages
 - TeX Live / MacTeX / MiKTeX avec `latexmk` et `biber`.
 - VS Code + extension **LaTeX Workshop** (optionnel mais pratique).
 
-## Structure
-- `main.tex` : point d'entrée, inclut toutes les sections.
-- `tex/` : fichiers de sections (`01_introduction.tex`, `02_numerical_exploration.tex`, …), préambule (`preamble.tex`), page de titre et annexes.
-- `references.bib` : références BibLaTeX.
-- `input_data/matrix.txt` : matrice de transition 27×27 fournie.
-- `images/` : illustrations (ex. `matrix_proba.pdf`) + place pour vos figures.
-- `.latexmkrc` : sortie dans `out/` et configuration `biber`.
-- `out/` : répertoire de compilation (généré par `latexmk`).
+## Installation rapide des dépendances LaTeX
+- **macOS (Homebrew)**  
+  ```bash
+  brew update
+  brew install texlive   # inclut latexmk et biber
+  latexmk --version && biber --version
+  ```
+  (Si vous préférez MacTeX complet : `brew install --cask mactex`.)
+
+- **Windows**  
+  1. Installez MiKTeX depuis https://miktex.org/download ou via winget :  
+     ```powershell
+     winget install -e --id MiKTeX.MiKTeX
+     ```
+  2. Installez Perl (requis par `latexmk`) si vous ne l'avez pas déjà :  
+     ```powershell
+     winget install -e --id StrawberryPerl.StrawberryPerl
+     ```
+     Redémarrez la session pour que `perl` soit dans le PATH.
+  3. Ouvrez la « MiKTeX Console » et ajoutez les paquets manquants (`latexmk`, `biber`) si non présents.  
+  4. Vérifiez :  
+     ```powershell
+     latexmk --version
+     biber --version
+     ```
+
+## Compiler
+Depuis la racine :
+```bash
+latexmk -pdf main.tex
+```
 
 ## Vue rapide de la structure
 ```
@@ -38,9 +61,11 @@ markov-limit-distributions/
 └── .vscode/settings.json  # VS Code LaTeX Workshop : sortie out/
 ```
 
-## Compiler
-Depuis la racine :
-```bash
-latexmk -pdf main.tex
-```
-Avec LaTeX Workshop, assurez-vous que la commande utilise `latexmk` (le fichier `.latexmkrc` force la sortie dans `out/`).
+## Structure
+- `main.tex` : point d'entrée, inclut toutes les sections.
+- `tex/` : fichiers de sections (`01_introduction.tex`, `02_numerical_exploration.tex`, …), préambule (`preamble.tex`), page de titre et annexes.
+- `references.bib` : références BibLaTeX.
+- `input_data/matrix.txt` : matrice de transition 27×27 fournie.
+- `images/` : illustrations (ex. `matrix_proba.pdf`) + place pour vos figures.
+- `.latexmkrc` : sortie dans `out/` et configuration `biber`.
+- `out/` : répertoire de compilation (généré par `latexmk`).
