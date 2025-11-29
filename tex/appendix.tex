@@ -1,8 +1,8 @@
 \section{Annexes}
 
-\subsection{Scripts et programmes}
+\subsection{Fonctions utilisées dans le programme markov\_analyzer en C}
 
-\begin{lstlisting}[style=codeblock,caption={Distribution sur une étape puis t étapes (dist\_step et dist\_power)},label={lst:dist_power}]
+\begin{lstlisting}[style=codeblock,caption={Propagation d'une étape (dist\_step)},label={lst:dist_step}]
 /**
  * @brief  Effectue une etape de distribution : pi1 = pi0 * M
  *
@@ -29,8 +29,10 @@ void dist_step(const float *pi0, const t_matrix *M, float *pi1) {
         pi1[col] = sum;
     }
 }
+\end{lstlisting}
 
-  /**
+\begin{lstlisting}[style=codeblock,caption={Propagation sur t etapes (dist\_power)},label={lst:dist_power}]
+/**
  * @brief  Calcule Pi_t = Pi_0 M^t par iterations successives
  *
  * Utilise `dist_step` de maniere repete pour appliquer `t` transitions.
@@ -88,50 +90,6 @@ void dist_power(const float *pi0, const t_matrix *M, int t, float *pit) {
 
     free(current);
     free(next);
-}
-\end{lstlisting}
-
-\begin{lstlisting}[style=codeblock,caption={Calcul numérique de la distribution stationnaire sur une classe persistante},label={lst:stationary}]
-/**
- * @brief  Calcule la distribution stationnaire d'une matrice de transition
- *
- * @param MC       Matrice de transition de la classe persistante
- * @param eps      Tolerance de convergence
- * @param max_iter Nombre maximal d'iterations
- * @param pi_out   Tableau de sortie pour la distribution stationnaire (taille MC->n)
- *
- * @return 1 si convergence atteinte, 0 sinon
- */
-int stationary_distribution(const t_matrix *MC, float eps, int max_iter, float *pi_out) {
-    if (!MC || !MC->a || MC->n <= 0 || !pi_out || max_iter <= 0) {
-        return 0;
-    }
-    if (eps < 0.0f) eps = -eps;
-
-    int n = MC->n;
-    float *cur = (float *)malloc((size_t)n * sizeof(float));
-    float *next = (float *)malloc((size_t)n * sizeof(float));
-    if (!cur || !next) {
-        free(cur); free(next);
-        perror("malloc");
-        return 0;
-    }
-
-    // Distribution initiale uniforme
-    for (int i = 0; i < n; ++i) cur[i] = 1.0f / (float)n;
-
-    int converged = 0;
-    for (int it = 0; it < max_iter; ++it) {
-        dist_step(cur, MC, next);
-        float d = dist_l1(cur, next, n);
-        for (int i = 0; i < n; ++i) cur[i] = next[i];
-        if (d < eps) { converged = 1; break; }
-    }
-
-    for (int i = 0; i < n; ++i) pi_out[i] = cur[i];
-    free(cur);
-    free(next);
-    return converged;
 }
 \end{lstlisting}
 

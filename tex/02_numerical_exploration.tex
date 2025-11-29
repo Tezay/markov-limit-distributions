@@ -1,29 +1,23 @@
-\section{Exploration numérique}
-Cette partie regroupe les réponses aux questions 1 à 7 de l'énoncé, réalisées à l'aide du programme \texttt{Markov Graph Analyzer} développé en C \parencite{markovGraphAnalyzer2025}.
+\section*{Exploration numérique}
+\phantomsection
+\addcontentsline{toc}{section}{Exploration numérique}
 
-\subsection{Approche de calcul}
+\subsection*{Question 1 — départ en état 2}
+\phantomsection
+\addcontentsline{toc}{subsection}{Question 1 — départ en état 2}
+Nous allons calculer \(\Pi^{(n)} = \Pi^{(0)} M^{n}\) avec \(\Pi^{(0)} = e_2\) (vecteur unité en position 2 pour commencer à l'état 2) et \(M\) la matrice 27\(\times\)27 fournie.
+Nous allons utiliser le programme réalisé en projet de C \texttt{markov\_analyzer} \parencite{markovGraphAnalyzer2025} qui va  reconstruire d'abord la matrice de transition \(M\) à partir du fichier fourni sur Moodle, puis calculer les distributions \(\Pi^{(n)}\) pour \(n=1,2,10,50\).
 \begin{itemize}[label=\textbullet]
-  \item Charger la matrice de transition \texttt{input\_data/matrix.txt} et vérifier que chaque ligne somme à 1.
-  \item Implémenter la propagation \(\Pi^{(n)} = \Pi^{(0)} P^{n}\) et tracer \(n \mapsto \Pi^{(n)}\) pour repérer les convergences/oscillations.
-  \item Conserver les scripts et commandes utilisés (à déposer en annexe ou référencés depuis un dépôt).
+  \item Arguments utilisés : \\
+  \texttt{./markov\_analyzer ---in data/moodle/matrix.txt ---dist-start 2 ---dist-steps 1} \\
+  \texttt{./markov\_analyzer ---in data/moodle/matrix.txt ---dist-start 2 ---dist-steps 2} \\
+  \texttt{./markov\_analyzer ---in data/moodle/matrix.txt ---dist-start 2 ---dist-steps 10} \\
+  \texttt{./markov\_analyzer ---in data/moodle/matrix.txt ---dist-start 2 ---dist-steps 50}
+  \item Les sorties détaillées sont disponibles dans \texttt{data/q1/n\{1,2,10,50\}\_out.txt}; un calcul supplémentaire à \(n=51\) (\texttt{n51\_out.txt}) sert pour le test de convergence \(\Pi^{(n+1)} - \Pi^{(n)}\).
 \end{itemize}
 
-\subsection{Scénarios et résultats attendus}
-Pour chaque configuration initiale ci-dessous, documenter : (i) les vecteurs \(\Pi^{(n)}\) pour \(n=1,2,10,50\), (ii) les graphes de convergence, (iii) l'existence et la valeur éventuelle de la distribution limite.
-
-\subsubsection{Question 1 — départ en état 2}
-Le système part de l’état \(2\) (\(\Pi^{(0)} = e_2\)). Les calculs numériques ont été effectués avec le programme \texttt{./markov-graph-analyzer ---in data/from\_moodle/matrix.txt ---eps 0.01 ---dist-start 2 ---dist-steps 50}, basé sur la fonction \texttt{dist\_power}\textsuperscript{\ref{lst:dist_power}}.
-Les distributions non nulles restent confinées dans la classe finale \(C_2=\{5,12,21,25,2\}\); toutes les autres composantes restent nulles (chaîne réductible, classe fermée car pas de successeurs).
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.7\textwidth]{hasse_q1.png}
-  \caption{Diagramme de Hasse des classes communicantes (export du programme).}
-  \label{fig:q1_hasse}
-\end{figure}
-
-\paragraph{(a) Distributions demandées.} Pour \(n=1,2,10,50\), seules les cinq composantes de \(C_2\) sont non nulles (la somme vaut 1 à chaque étape). On obtient le tableau (valeurs non nulles uniquement) :
-
+\paragraph{(a) Distributions des probabilités :} Les composantes non nulles sont rassemblées dans le tableau~\ref{tab:q1_distributions} ;
+les produits \(\Pi^{(0)} P^{n}\) sont effectués avec les fonctions \texttt{dist\_step}\textsuperscript{\ref{lst:dist_step}} et \texttt{dist\_power}\textsuperscript{\ref{lst:dist_power}}.
 \begin{table}[H]
   \centering
   \begin{tabular}{@{}lccccc@{}}
@@ -36,12 +30,12 @@ Les distributions non nulles restent confinées dans la classe finale \(C_2=\{5,
     50 & 0.2397 & 0.1953 & 0.2338 & 0.1796 & 0.1516 \\
     \bottomrule
   \end{tabular}
-  \caption{Distributions \(\Pi^{(n)}\) (départ en \(e_2\)), données issues de \texttt{data/q1/n\{1,2,10,50\}\_out.txt}.}
+  \caption{Distributions \(\Pi^{(n)}\) (départ en \(e_2\)), issues de \texttt{data/q1/n\{1,2,10,50\}\_out.txt}.}
   \label{tab:q1_distributions}
 \end{table}
 
 \paragraph{(b) Graphe \(n \mapsto \Pi_A(n)\).} La figure~\ref{fig:q1_pi} trace les cinq composantes non nulles pour \(n \in \{1,2,10,50\}\) (les autres restent à 0), avec un axe des abscisses en échelle logarithmique (base 10) pour mettre en évidence les premiers pas et les itérations lointaines.
-On observe un lissage rapide vers la stationnaire autour de \(n\approx 10\).
+On observe un lissage rapide autour de \(n\approx 10\).
 
 \begin{figure}[H]
   \centering
@@ -75,44 +69,43 @@ On observe un lissage rapide vers la stationnaire autour de \(n\approx 10\).
   \label{fig:q1_pi}
 \end{figure}
 
-\paragraph{(c) Existence et valeur de la distribution limite.}
-\begin{itemize}[label=\textbullet]
-  \item \(C_2\) est fermée : aucune probabilité ne s’échappe vers les autres classes, donc toute la masse reste dans \(\{5,12,21,25,2\}\).
-  \item Les états de \(C_2\) communiquent et l’on peut y revenir après plusieurs pas sans être bloqué dans un cycle rigide ; en répétant les pas, la masse s’y « mélange ».
-  \item Ce mélange se stabilise numériquement vers un seul profil : partir de l’état 2 (ou de n’importe quel état de \(C_2\)) conduit au même vecteur limite.
-\end{itemize}
-Les valeurs limites sont obtenues numériquement par la fonction \texttt{stationary\_distribution}\textsuperscript{\ref{lst:stationary}} du programme \texttt{./markov-graph-analyzer}, appliquée à la sous-matrice de la classe persistante.
-Sur les 27 états, la limite vaut
+\paragraph{(c) Existence et valeur de la distribution limite.} Le calcul supplémentaire à \(n=51\) (\texttt{data/q1/n51\_out.txt}) donne \(\Pi^{(51)} = \Pi^{(50)}\) à \(10^{-4}\) près, donc \(\Pi^{(51)} - \Pi^{(50)} \approx 0\) pour chaque composante.
+La distribution limite est donc atteinte à \(n=50\) avec les valeurs suivantes :
 \[
-  \Pi^{(\infty)}(5)=0{,}1944,\quad
-  \Pi^{(\infty)}(12)=0{,}2332,\quad
-  \Pi^{(\infty)}(21)=0{,}1806,\quad
-  \Pi^{(\infty)}(25)=0{,}1520,\quad
-  \Pi^{(\infty)}(2)=0{,}2398,
+  \Pi^{(\infty)}(2)=0{,}2397,\quad
+  \Pi^{(\infty)}(5)=0{,}1953,\quad
+  \Pi^{(\infty)}(12)=0{,}2338,\quad
+  \Pi^{(\infty)}(21)=0{,}1796,\quad
+  \Pi^{(\infty)}(25)=0{,}1516,
 \]
-et est nulle ailleurs. Les valeurs observées à \(n=10\) et \(n=50\) coïncident avec cette limite à \(10^{-4}\) près.
+et les autres composantes nulles.
 
-\subsubsection{Question 2 — répartition uniforme sur 2, 5, 12, 21, 25}
+\subsection*{Question 2 — répartition uniforme sur 2, 5, 12, 21, 25}
+\phantomsection
+\addcontentsline{toc}{subsection}{Question 2 — répartition uniforme sur 2, 5, 12, 21, 25}
 \placeholder{Analyser la convergence avec les poids initiaux égaux.}
 
-\subsubsection{Question 3 — répartition aléatoire sur 2, 5, 12, 21, 25}
+\subsection*{Question 3 — répartition aléatoire sur 2, 5, 12, 21, 25}
+\phantomsection
+\addcontentsline{toc}{subsection}{Question 3 — répartition aléatoire sur 2, 5, 12, 21, 25}
 \placeholder{Étudier la sensibilité de la distribution limite aux paramètres \(a,b,c,d,e\).}
 
-\subsubsection{Question 4 — états 8, 9, 16}
+\subsection*{Question 4 — états 8, 9, 16}
+\phantomsection
+\addcontentsline{toc}{subsection}{Question 4 — états 8, 9, 16}
 \placeholder{Comparer départ en 8 vs. mélange uniforme vs. mélange aléatoire.}
 
-\subsubsection{Question 5 — états 10, 14, 19, 22, 24}
+\subsection*{Question 5 — états 10, 14, 19, 22, 24}
+\phantomsection
+\addcontentsline{toc}{subsection}{Question 5 — états 10, 14, 19, 22, 24}
 \placeholder{Identifier les comportements limites selon les trois répartitions demandées.}
 
-\subsubsection{Question 6 — états 6, 17, 20}
+\subsection*{Question 6 — états 6, 17, 20}
+\phantomsection
+\addcontentsline{toc}{subsection}{Question 6 — états 6, 17, 20}
 \placeholder{Documenter les trajectoires de \(\Pi^{(n)}\) et la présence/absence de limite.}
 
-\subsubsection{Question 7 — états 3, 7, 23}
+\subsection*{Question 7 — états 3, 7, 23}
+\phantomsection
+\addcontentsline{toc}{subsection}{Question 7 — états 3, 7, 23}
 \placeholder{Même analyse : convergence éventuelle et dépendance à l'initialisation.}
-
-\subsection{Visualisations suggérées}
-\begin{itemize}[label=\textbullet]
-  \item Graphes de barres superposées montrant \(\Pi^{(n)}\) pour quelques valeurs de \(n\).
-  \item Courbes de \(\ell_1\)-distance entre \(\Pi^{(n)}\) et la distribution limite candidate.
-  \item Schémas de graphe (TikZ) pour les sous-chaînes explorées, si pertinents.
-\end{itemize}
