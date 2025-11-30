@@ -93,8 +93,383 @@ void dist_power(const float *pi0, const t_matrix *M, int t, float *pit) {
 }
 \end{lstlisting}
 
+\begin{lstlisting}[style=codeblock,caption={Fonction pour obtenir le diagramme de Hasse (remove\_transitive\_links)},label={lst:hasse_diagram}]
+/**
+ * @brief Supprime les liens redondants pour obtenir le diagramme de Hasse (les liens transitifs : A->C si A->B et B->C existent).
+ *
+ * @param links Pointeur vers le tableau de liens entre classes a modifier.
+ * @param nb_classes Nombre total de classes.
+ */
+void remove_transitive_links(HasseLinkArray *links, int nb_classes){
+    // 1. Allocation d'une matrice d'accessibilite (matrice booleenne carree de taille nb_classes x nb_classes)
+    int **reach = malloc(nb_classes * sizeof(int *));
+    for (int i = 0; i < nb_classes; i++) {
+        reach[i] = calloc(nb_classes, sizeof(int)); // calloc initialise a 0
+    }
+
+    // 2. Remplissage initial de la matrice d'accessibilite avec les liens directs
+    for (int i = 0; i < links->count; i++) {
+        reach[links->links[i].from_class][links->links[i].to_class] = 1;
+    }
+
+    // 3. Calcul de la fermeture transitive (Algorithme de Floyd-Warshall)
+    // Apres cette etape, reach[i][j] = 1 si la classe i peut atteindre la classe j
+    for (int k = 0; k < nb_classes; k++) { // Classe intermediaire
+        for (int i = 0; i < nb_classes; i++) { // Classe de depart
+            for (int j = 0; j < nb_classes; j++) { // Classe d'arrivee
+                // Si i peut atteindre k, et k peut atteindre j, alors i peut atteindre j
+                if (reach[i][k] && reach[k][j]) reach[i][j] = 1;
+            }
+        }
+    }
+
+    // 4. Filtrage : on ne garde que les liens qui ne sont pas transitifs
+    int write_idx = 0; // Index pour ecrire dans le tableau compacte
+    for (int i = 0; i < links->count; i++) {
+        int from = links->links[i].from_class;
+        int to = links->links[i].to_class;
+        int transitive = 0;
+        
+        // Recherche d'un chemin intermediaire k tel que from -> k -> to
+        for (int k = 0; k < nb_classes; k++) {
+            // k doit etre different de from et to
+            if (k != from && k != to && reach[from][k] && reach[k][to]) {
+                transitive = 1; // Lien transitif trouve (A->B->C, donc A->C est redondant)
+                break;
+            }
+        }
+        
+        // Si le lien n'est pas transitif (il fait partie du graphe minimal)
+        if (!transitive) {
+            links->links[write_idx++] = links->links[i]; // Garde le lien
+        }
+    }
+    // Mise a jour du nombre de liens apres le compactage
+    links->count = write_idx;
+
+    // 5. Liberation de la matrice d'accessibilite
+    for (int i = 0; i < nb_classes; i++) free(reach[i]);
+    free(reach);
+}
+\end{lstlisting}
+
+\begin{lstlisting}[style=codeblock,caption={Calcul de la période (class\_period)},label={lst:compute_period}]
+/**
+ * @brief Calcule la periode d'une chaine de Markov irreductible (une classe SCC).
+ *
+ * La periode d est le PGCD de tous les exposants k pour lesquels une probabilite
+ * de retour a l'etat de depart est positive (M^k[i][i] > 0).
+ *
+ * @param[in] MC Matrice de transition (sous-matrice de la classe irreductible)
+ *
+ * @return Periode d(MC) (>= 1). Retourne 0 si la matrice est vide.
+ */
+int class_period(const t_matrix *MC) {
+    if (MC->n <= 0) {
+        return 0; // Gere le cas d'une matrice vide
+    }
+
+    // Borne superieure (2*n est un choix pratique et conservateur pour la plupart des cas)
+    // Elle limite le nombre d'iterations pour garantir la terminaison rapide.
+    const int max_power = 2 * MC->n;
+    const int n = MC->n;
+    
+    // Mk stocke la matrice de transition a la puissance k (commence a M^1)
+    t_matrix Mk = (t_matrix){0};
+    mx_copy(MC, &Mk); // Mk = M^1
+    
+    // period_gcd stocke le PGCD mis a jour des exposants k observes
+    int period_gcd = 0; 
+
+    // --- Verification pour k = 1 (La matrice est deja M^1) ---
+    int diag_non_zero = 0;
+    for (int i = 0; i < n; i++) {
+        // Teste si la probabilite de retour apres 1 etape est positive
+        if (Mk.a[i][i] > EPSILON) {
+            diag_non_zero = 1;
+            break;
+        }
+    }
+    if (diag_non_zero) {
+        // Si retour possible en 1 etape, la periode est au moins 1.
+        period_gcd = 1;
+    }
+
+    // --- Iteration pour k >= 2 (M^2, M^3, ...) ---
+    for (int k = 2; k <= max_power; k++) {
+        t_matrix Mk_next = (t_matrix){0};
+        
+        // Calcul de M^k = M^(k-1) * M
+        mx_mul(&Mk, MC, &Mk_next);
+        
+        // Liberation de la matrice precedente (M^(k-1))
+        mx_free(&Mk);
+        Mk = Mk_next; // Mise a jour de Mk pour l'etape k
+
+        diag_non_zero = 0;
+        // VVerifie la diagonale de la nouvelle matrice M^k
+        for (int i = 0; i < n; i++) {
+            // Teste la probabilite de retour apres k etapes
+            if (Mk.a[i][i] > EPSILON) {
+                diag_non_zero = 1;
+                break;
+            }
+        }
+        
+        if (diag_non_zero) {
+            // Un retour est possible apres k etapes
+            if (period_gcd == 0) {
+                // Premier exposant trouve, initialise le PGCD
+                period_gcd = k;
+            } else {
+                // Met a jour le PGCD avec l'exposant k actuel
+                period_gcd = gcd(period_gcd, k);
+            }
+        }
+        
+        // Optimisation : si le PGCD atteint 1, la chaine est aperiodique.
+        if (period_gcd == 1) {
+            mx_free(&Mk);
+            return 1;
+        }
+    }
+    
+    mx_free(&Mk); // Libere la derniere matrice calculee
+
+    // Cas de la periode 1 si aucun retour n'a ete trouve (chaine aperiodique des le debut).
+    // Pour une SCC, une periode est toujours trouvee, mais cette ligne garantit une valeur >= 1.
+    return (period_gcd == 0) ? 1 : period_gcd;
+}
+\end{lstlisting}
+
 \subsection{Matrice de transition}
 \placeholder{Rappeler la matrice 27x27 ou la source du fichier \texttt{input\_data/matrix.txt}.}
 
 \subsection{Figures supplémentaires}
-\placeholder{Déposer ici les graphes détaillés (convergences, diagrammes de Hasse, etc.) qui complètent le corps du texte.}
+
+\begin{figure}[H]
+\centering
+\resizebox{\textwidth}{!}{
+\begin{tikzpicture}[
+    >={Stealth[round]}, % Style de flèche
+    shorten >=1pt,
+    auto,
+    node distance=2.5cm,
+    on grid, 
+    % --- Styles Généraux ---
+    every state/.style={
+        circle, 
+        draw=black!60, 
+        thick, 
+        minimum size=0.9cm,
+        font=\bfseries
+    },
+    every edge/.style={
+        draw=black!60, 
+        ->, 
+        thick,
+        font=\tiny
+    },
+    lbl/.style={ 
+        fill=white, 
+        inner sep=1pt, 
+        text=black!80,
+        font=\tiny,
+        fill opacity=0.85,
+        text opacity=1
+    },
+    % --- Couleurs des Partitions (Classes) ---
+    c1/.style={fill=red!20},      % C1: {11, 18, 4, 26, 27, 1}
+    c2/.style={fill=blue!20},     % C2: {5, 12, 21, 25, 2}
+    c3/.style={fill=green!20},    % C3: {6, 20, 17}
+    c4/.style={fill=orange!30},   % C4: {7, 23, 3}
+    c5/.style={fill=cyan!20},     % C5: {16, 9, 8}
+    c6/.style={fill=magenta!20},  % C6: {14}
+    c7/.style={fill=yellow!40},   % C7: {19, 22, 24, 10}
+    c8/.style={fill=violet!20}    % C8: {15, 13}
+]
+
+    % ================= PLACEMENT DES SOMMETS =================
+
+    % --- Partition C1 (Rouge) ---
+    \node[state, c1] (A) at (0,0) {1};
+    \node[state, c1] (AA) [above left=2cm and 1.5cm of A] {27};
+    \node[state, c1] (K) [above right=2cm and 1.5cm of A] {11};
+    \node[state, c1] (D) [below=2.5cm of A] {4};
+    \node[state, c1] (R) [right=2.5cm of K] {18};
+    \node[state, c1] (Z) [left=2.5cm of D] {26};
+
+    % --- Partition C4 (Orange) ---
+    \node[state, c4] (C) [right=7cm of A] {3}; 
+    \node[state, c4] (G) [above right=2cm and 1cm of C] {7};
+    \node[state, c4] (W) [right=2.5cm of C] {23};
+
+    % --- Partition C8 (Violet) ---
+    \node[state, c8] (M) [above left=2cm and 1cm of C] {13};
+    \node[state, c8] (O) [above left=1cm and 2.2cm of M] {15}; 
+    
+    % --- Partition C3 (Vert) ---
+    \node[state, c3] (T) [right=3cm of G] {20};
+    \node[state, c3] (F) [above=2cm of T] {6};
+    \node[state, c3] (Q) [right=2cm of F] {17};
+
+    % --- Partition C2 (Bleu) ---
+    \node[state, c2] (B) [below right=4cm and 2cm of D] {2};
+    \node[state, c2] (L) [right=2.5cm of B] {12};
+    \node[state, c2] (E) [below left=2cm and 1cm of L] {5};
+    \node[state, c2] (U) [right=2.5cm of E] {21};
+    \node[state, c2] (Y) [above=2.2cm of U] {25};
+
+    % --- Partition C6 (Magenta) ---
+    \node[state, c6] (N) [right=5.5cm of L] {14};
+
+    % --- Partition C5 (Cyan) ---
+    \node[state, c5] (P) [right=2.5cm of N] {16};
+    \node[state, c5] (I) [above=2cm of P] {9};
+    \node[state, c5] (H) [above=2cm of N] {8};
+
+    % --- Partition C7 (Jaune) ---
+    \node[state, c7] (X) [right=3cm of P] {24}; 
+    \node[state, c7] (V) [right=2.5cm of X] {22};
+    \node[state, c7] (S) [above=2.5cm of V] {19};
+    \node[state, c7] (J) [left=2.5cm of S] {10};
+
+
+    % ================= CONNEXIONS =================
+
+    % Groupe A
+    \path (A) edge[bend right] node[lbl]{0.20} (AA)
+          (A) edge node[lbl]{0.20} (K)
+          (A) edge node[lbl]{0.60} (D);
+    
+    % Groupe B
+    \path (B) edge[bend left] node[lbl, near end]{0.10} (Y)
+          (B) edge node[lbl]{0.40} (L)
+          (B) edge node[lbl]{0.20} (E)
+          (B) edge[loop below] node[lbl]{0.30} (B);
+
+    % Groupe C
+    \path (C) edge node[lbl]{0.30} (W)
+          (C) edge node[lbl]{0.30} (G)
+          (C) edge[bend left=10] node[lbl]{0.40} (F);
+
+    % Groupe D
+    \path (D) edge node[lbl]{0.20} (Z)
+          (D) edge[bend right=10] node[lbl]{0.20} (R)
+          (D) edge[bend left] node[lbl]{0.60} (A);
+
+    % Groupe E
+    \path (E) edge node[lbl]{0.30} (Y)
+          (E) edge node[lbl]{0.20} (U)
+          (E) edge node[lbl]{0.10} (L)
+          (E) edge[bend left] node[lbl]{0.40} (B);
+
+    % Groupe F
+    \path (F) edge node[lbl]{1.00} (Q);
+
+    % Groupe G
+    \path (G) edge node[lbl]{0.30} (W)
+          (G) edge node[lbl]{0.40} (T)
+          (G) edge[bend left] node[lbl]{0.30} (C);
+
+    % Groupe H
+    \path (H) edge node[lbl]{1.00} (I);
+
+    % Groupe I
+    \path (I) edge node[lbl]{0.90} (P)
+          (I) edge[loop above] node[lbl]{0.10} (I);
+
+    % Groupe J
+    \path (J) edge node[lbl]{0.20} (X)
+          (J) edge[bend right] node[lbl, near start]{0.20} (V)
+          (J) edge node[lbl]{0.20} (S)
+          (J) edge[out=120, in=60] node[lbl, near end]{0.40} (L); 
+
+    % Groupe K
+    \path (K) edge node[lbl]{0.50} (R)
+          (K) edge[bend left] node[lbl]{0.50} (A);
+
+    % Groupe L
+    \path (L) edge node[lbl]{0.20} (U)
+          (L) edge[loop above] node[lbl]{0.30} (L)
+          (L) edge[bend left] node[lbl]{0.40} (E)
+          (L) edge[bend left] node[lbl]{0.10} (B);
+
+    % Groupe M
+    \path (M) edge node[lbl]{0.70} (O)
+          (M) edge node[lbl]{0.30} (C);
+
+    % Groupe N
+    \path (N) edge node[lbl]{0.10} (P)
+          (N) edge[loop right] node[lbl]{0.40} (N)
+          (N) edge[bend right] node[lbl]{0.10} (I)
+          (N) edge node[lbl]{0.10} (H)
+          (N) edge[bend left=25] node[lbl]{0.20} (E)
+          (N) edge[bend left=35] node[lbl, pos=0.3]{0.10} (B);
+
+    % Groupe O
+    \path (O) edge[bend right=20] node[lbl]{0.50} (Z) 
+          (O) edge[bend left] node[lbl]{0.50} (M);
+
+    % Groupe P
+    \path (P) edge[bend right] node[lbl, near end]{1.00} (H);
+
+    % Groupe Q
+    \path (Q) edge[bend left] node[lbl]{1.00} (T);
+
+    % Groupe R
+    \path (R) edge[bend left] node[lbl]{0.50} (K)
+          (R) edge[bend right] node[lbl, near start]{0.50} (D);
+
+    % Groupe S
+    \path (S) edge node[lbl]{0.30} (X)
+          (S) edge node[lbl]{0.10} (V)
+          (S) edge[loop right] node[lbl]{0.50} (S)
+          (S) edge[bend left] node[lbl]{0.10} (J);
+
+    % Groupe T
+    \path (T) edge[bend left] node[lbl]{1.00} (F);
+
+    % Groupe U
+    \path (U) edge node[lbl]{0.30} (Y)
+          (U) edge[loop below] node[lbl]{0.10} (U)
+          (U) edge[bend left] node[lbl]{0.10} (L)
+          (U) edge[bend left] node[lbl]{0.30} (E)
+          (U) edge[bend left=45] node[lbl]{0.20} (B);
+
+    % Groupe V
+    \path (V) edge node[lbl]{0.20} (X)
+          (V) edge[bend left] node[lbl]{0.20} (S)
+          (V) edge[bend left] node[lbl]{0.40} (P)
+          (V) edge[bend right] node[lbl]{0.20} (J);
+
+    % Groupe W
+    \path (W) edge[bend left] node[lbl]{0.40} (Q)
+          (W) edge[bend left] node[lbl]{0.30} (G)
+          (W) edge[bend left] node[lbl]{0.30} (C);
+
+    % Groupe X
+    \path (X) edge[bend left] node[lbl]{0.30} (V)
+          (X) edge[bend left] node[lbl]{0.30} (S)
+          (X) edge[bend left] node[lbl, near end]{0.10} (N)
+          (X) edge node[lbl]{0.30} (J);
+
+    % Groupe Y
+    \path (Y) edge[loop above] node[lbl]{0.10} (Y)
+          (Y) edge[bend left] node[lbl]{0.50} (U)
+          (Y) edge[bend right=20] node[lbl, near start]{0.20} (L)
+          (Y) edge[bend left=40] node[lbl, pos=0.2]{0.20} (B);
+
+    % Groupe Z
+    \path (Z) edge[bend right] node[lbl]{0.50} (AA)
+          (Z) edge[bend left] node[lbl]{0.50} (D);
+
+    % Groupe AA
+    \path (AA) edge[bend right] node[lbl]{0.50} (Z)
+          (AA) edge[bend right] node[lbl]{0.50} (A);
+
+\end{tikzpicture}
+}
+\caption{Graphe complet de la chaîne de Markov (27 états).}
+\label{fig:full_graph}
+\end{figure}

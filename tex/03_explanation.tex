@@ -5,12 +5,274 @@
 \subsection*{Question 8 — structure de la chaîne à 27 états}
 \phantomsection
 \addcontentsline{toc}{subsection}{Question 8 — structure de la chaîne à 27 états}
-\begin{itemize}[label=\textbullet]
-  \item Identifier les classes communicantes (utiliser le code ASD2, Python ou Matlab).
-  \item Tracer le graphe réduit et caractériser chaque classe (transitoire/finale, période).
-  \item Fournir les schémas obtenus (inclure les figures générées dans \texttt{images/}).
+
+\tikzset{
+    state/.style={circle, draw=black!60, thick, minimum size=0.6cm, font=\bfseries\footnotesize},
+    lbl/.style={fill=white, inner sep=0.5pt, text=black!80, font=\tiny, fill opacity=0.85, text opacity=1},
+    c1/.style={fill=red!20},      % C1: {11, 18, 4, 26, 27, 1}
+    c2/.style={fill=blue!20},     % C2: {5, 12, 21, 25, 2}
+    c3/.style={fill=green!20},    % C3: {6, 20, 17}
+    c4/.style={fill=orange!30},   % C4: {7, 23, 3}
+    c5/.style={fill=cyan!20},     % C5: {16, 9, 8}
+    c6/.style={fill=magenta!20},  % C6: {14}
+    c7/.style={fill=yellow!40},   % C7: {19, 22, 24, 10}
+    c8/.style={fill=violet!20},   % C8: {15, 13}
+    >={Stealth[round]},
+    shorten >=1pt,
+    auto,
+    node distance=2cm,
+    on grid,
+    every edge/.style={draw, ->, thick}
+}
+
+\paragraph{a) Classes communicantes}
+Pour cette analyse, nous avons utilisé notre programme C \texttt{markov\_analyzer} \parencite{markovGraphAnalyzer2025} avec la commande suivante :
+\begin{center}
+\texttt{./markov\_analyzer -{}-in data/moodle/matrix.txt -{}-period}
+\end{center}
+Les résultats complets sont disponibles dans le fichier \texttt{data/q8/program\_out.txt}, et les fichiers sources des graphes générés sont \texttt{data/q8/graph.mmd} (graphe complet\textsuperscript{\ref{fig:full_graph}}) et \texttt{data/q8/hasse.mmd} (diagramme de Hasse).
+
+L'analyse de la matrice de transition a permis d'identifier 8 classes communicantes distinctes :
+\begin{itemize}
+    \item \textbf{C1} : \{1, 4, 11, 18, 26, 27\}
+    \item \textbf{C2} : \{2, 5, 12, 21, 25\}
+    \item \textbf{C3} : \{6, 17, 20\}
+    \item \textbf{C4} : \{3, 7, 23\}
+    \item \textbf{C5} : \{8, 9, 16\}
+    \item \textbf{C6} : \{14\}
+    \item \textbf{C7} : \{10, 19, 22, 24\}
+    \item \textbf{C8} : \{13, 15\}
 \end{itemize}
-\placeholder{Insérer ici les résultats et figures.}
+
+\paragraph{b) Graphe réduit (Diagramme de Hasse)\textsuperscript{\ref{lst:hasse_diagram}}}
+Le graphe réduit montre les relations d'accessibilité entre les classes. Les classes finales sont C1, C2, C3 et C5.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    node distance=2cm and 2cm,
+    every node/.style={
+        rectangle, 
+        rounded corners=5pt, 
+        draw=black!60, 
+        thick, 
+        align=center, 
+        minimum width=2.5cm,
+        minimum height=1.2cm,
+        drop shadow
+    },
+    edge from parent/.style={draw, ->, thick, black!70}
+]
+    % Arbre Gauche (Racine C8)
+    \node[c8] (C8) at (0,0) {\textbf{C8} \\ \scriptsize \{15, 13\}};
+    \node[c4] (C4) [below left=2.5cm and 2cm of C8] {\textbf{C4} \\ \scriptsize \{7, 23, 3\}};
+    \node[c1] (C1) [below right=2.5cm and 2cm of C8] {\textbf{C1} \\ \scriptsize \{11, 18, 4, 26, 27, 1\}};
+    \node[c3] (C3) [below=2cm of C4] {\textbf{C3} \\ \scriptsize \{6, 20, 17\}};
+
+    % Arbre Droite (Racine C7)
+    \node[c7] (C7) at (8,0) {\textbf{C7} \\ \scriptsize \{19, 22, 24, 10\}};
+    \node[c6] (C6) [below=2.5cm of C7] {\textbf{C6} \\ \scriptsize \{14\}};
+    \node[c5] (C5) [below left=2cm and 2cm of C6] {\textbf{C5} \\ \scriptsize \{16, 9, 8\}};
+    \node[c2] (C2) [below right=2cm and 2cm of C6] {\textbf{C2} \\ \scriptsize \{5, 12, 21, 25, 2\}};
+
+    % Liens
+    \draw[->, thick] (C8) -- (C4);
+    \draw[->, thick] (C8) -- (C1);
+    \draw[->, thick] (C4) -- (C3);
+    \draw[->, thick] (C7) -- (C6);
+    \draw[->, thick] (C6) -- (C5);
+    \draw[->, thick] (C6) -- (C2);
+\end{tikzpicture}
+\caption{Diagramme de Hasse de la chaîne de Markov.}
+\label{fig:hasse}
+\end{figure}
+
+\paragraph{c) Analyse détaillée par classe (et calcule de leur période\textsuperscript{\ref{lst:compute_period}})}
+\mbox{}\\
+
+\noindent
+\begin{minipage}[t]{0.48\textwidth}
+    \textbf{Classe C1 (Finale, 2-périodique)} \\
+    Cette classe est \textbf{persistante} (finale) car elle ne mène à aucune autre classe. Elle est périodique de période 2.
+    \begin{center}
+    \begin{tikzpicture}
+        \node[state, c1] (A) at (0,0) {1};
+        \node[state, c1] (AA) [above left=1.5cm and 1cm of A] {27};
+        \node[state, c1] (K) [above right=1.5cm and 1cm of A] {11};
+        \node[state, c1] (D) [below=2cm of A] {4};
+        \node[state, c1] (R) [right=2cm of K] {18};
+        \node[state, c1] (Z) [left=2cm of D] {26};
+
+        \path (A) edge[bend right] node[lbl]{0.20} (AA)
+              (A) edge node[lbl]{0.20} (K)
+              (A) edge node[lbl]{0.60} (D);
+        \path (D) edge node[lbl]{0.20} (Z)
+              (D) edge[bend right=10] node[lbl]{0.20} (R)
+              (D) edge[bend left] node[lbl]{0.60} (A);
+        \path (K) edge node[lbl]{0.50} (R)
+              (K) edge[bend left] node[lbl]{0.50} (A);
+        \path (R) edge[bend left] node[lbl]{0.50} (K)
+              (R) edge[bend right] node[lbl]{0.50} (D);
+        \path (Z) edge[bend right] node[lbl]{0.50} (AA)
+              (Z) edge[bend left] node[lbl]{0.50} (D);
+        \path (AA) edge[bend right] node[lbl]{0.50} (Z)
+              (AA) edge[bend right] node[lbl]{0.50} (A);
+    \end{tikzpicture}
+    \end{center}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+    \textbf{Classe C2 (Finale, Apériodique)} \\
+    Classe \textbf{persistante} (finale) et aperiodique (période 1).
+    \begin{center}
+    \begin{tikzpicture}
+        \node[state, c2] (B) at (0,0) {2};
+        \node[state, c2] (L) [right=2cm of B] {12};
+        \node[state, c2] (E) [below left=1.5cm and 0.8cm of L] {5};
+        \node[state, c2] (U) [right=2cm of E] {21};
+        \node[state, c2] (Y) [above=1.8cm of U] {25};
+
+        \path (B) edge[bend left] node[lbl, near end]{0.10} (Y)
+              (B) edge node[lbl]{0.40} (L)
+              (B) edge node[lbl]{0.20} (E)
+              (B) edge[loop below] node[lbl]{0.30} (B);
+        \path (E) edge node[lbl]{0.30} (Y)
+              (E) edge node[lbl]{0.20} (U)
+              (E) edge node[lbl]{0.10} (L)
+              (E) edge[bend left] node[lbl]{0.40} (B);
+        \path (L) edge node[lbl]{0.20} (U)
+              (L) edge[loop above] node[lbl]{0.30} (L)
+              (L) edge[bend left] node[lbl]{0.40} (E)
+              (L) edge[bend left] node[lbl]{0.10} (B);
+        \path (U) edge node[lbl]{0.30} (Y)
+              (U) edge[loop below] node[lbl]{0.10} (U)
+              (U) edge[bend left] node[lbl]{0.10} (L)
+              (U) edge[bend left] node[lbl]{0.30} (E)
+              (U) edge[bend left=45] node[lbl]{0.20} (B);
+        \path (Y) edge[loop above] node[lbl]{0.10} (Y)
+              (Y) edge[bend left] node[lbl]{0.50} (U)
+              (Y) edge[bend right=20] node[lbl, near start]{0.20} (L)
+              (Y) edge[bend left=40] node[lbl, pos=0.2]{0.20} (B);
+    \end{tikzpicture}
+    \end{center}
+\end{minipage}
+
+\vspace{0.5cm}
+
+\noindent
+\begin{minipage}[t]{0.48\textwidth}
+    \textbf{Classe C3 (Finale, 3-périodique)} \\
+    Classe \textbf{persistante} (finale) avec une période de 3.
+    \begin{center}
+    \begin{tikzpicture}
+        \node[state, c3] (T) at (0,0) {20};
+        \node[state, c3] (F) [above=1.5cm of T] {6};
+        \node[state, c3] (Q) [right=1.5cm of F] {17};
+
+        \path (F) edge node[lbl]{1.00} (Q);
+        \path (Q) edge[bend left] node[lbl]{1.00} (T);
+        \path (T) edge[bend left] node[lbl]{1.00} (F);
+    \end{tikzpicture}
+    \end{center}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+    \textbf{Classe C4 (Transitoire, Apériodique)} \\
+    Classe \textbf{transitoire} (mène vers C3). Période 1.
+    \begin{center}
+    \begin{tikzpicture}
+        \node[state, c4] (C) at (0,0) {3}; 
+        \node[state, c4] (G) [above right=1.5cm and 0.8cm of C] {7};
+        \node[state, c4] (W) [right=2cm of C] {23};
+
+        \path (C) edge node[lbl]{0.30} (W)
+              (C) edge node[lbl]{0.30} (G);
+        \path (G) edge node[lbl]{0.30} (W)
+              (G) edge[bend left] node[lbl]{0.30} (C);
+        \path (W) edge[bend left] node[lbl]{0.30} (G)
+              (W) edge[bend left] node[lbl]{0.30} (C);
+    \end{tikzpicture}
+    \end{center}
+\end{minipage}
+
+\vspace{0.5cm}
+
+\noindent
+\begin{minipage}[t]{0.48\textwidth}
+    \textbf{Classe C5 (Finale, Apériodique)} \\
+    Classe \textbf{persistante} (finale). Période 1.
+    \begin{center}
+    \begin{tikzpicture}
+        \node[state, c5] (P) at (0,0) {16};
+        \node[state, c5] (I) [above=1.5cm of P] {9};
+        \node[state, c5] (H) [right=1.5cm of I] {8};
+
+        \path (H) edge node[lbl]{1.00} (I);
+        \path (I) edge node[lbl]{0.90} (P)
+              (I) edge[loop above] node[lbl]{0.10} (I);
+        \path (P) edge[bend right] node[lbl, near end]{1.00} (H);
+    \end{tikzpicture}
+    \end{center}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+    \textbf{Classe C6 (Transitoire, Apériodique)} \\
+    Classe \textbf{transitoire} (mène vers C5 et C2). Période 1.
+    \begin{center}
+    \begin{tikzpicture}
+        \node[state, c6] (N) at (0,0) {14};
+        \path (N) edge[loop right] node[lbl]{0.40} (N);
+    \end{tikzpicture}
+    \end{center}
+\end{minipage}
+
+\vspace{0.5cm}
+
+\noindent
+\begin{minipage}[t]{0.48\textwidth}
+    \textbf{Classe C7 (Transitoire, Apériodique)} \\
+    Classe \textbf{transitoire} (mène vers C6). Période 1.
+    \begin{center}
+    \begin{tikzpicture}
+        \node[state, c7] (X) at (0,0) {24}; 
+        \node[state, c7] (V) [right=2cm of X] {22};
+        \node[state, c7] (S) [above=2cm of V] {19};
+        \node[state, c7] (J) [left=2cm of S] {10};
+
+        \path (J) edge node[lbl]{0.20} (X)
+              (J) edge[bend right] node[lbl, near start]{0.20} (V)
+              (J) edge node[lbl]{0.20} (S);
+        \path (S) edge node[lbl]{0.30} (X)
+              (S) edge node[lbl]{0.10} (V)
+              (S) edge[loop right] node[lbl]{0.50} (S)
+              (S) edge[bend left] node[lbl]{0.10} (J);
+        \path (V) edge node[lbl]{0.20} (X)
+              (V) edge[bend left] node[lbl]{0.20} (S)
+              (V) edge[bend right] node[lbl]{0.20} (J);
+        \path (X) edge[bend left] node[lbl]{0.30} (V)
+              (X) edge[bend left] node[lbl]{0.30} (S)
+              (X) edge node[lbl]{0.30} (J);
+    \end{tikzpicture}
+    \end{center}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+    \textbf{Classe C8 (Transitoire, 2-périodique)} \\
+    Classe \textbf{transitoire} (mène vers C4 et C1). Période 2.
+    \begin{center}
+    \begin{tikzpicture}
+        \node[state, c8] (M) at (0,0) {13};
+        \node[state, c8] (O) [above left=1cm and 2cm of M] {15}; 
+        
+        \path (M) edge node[lbl]{0.70} (O);
+        \path (O) edge[bend left] node[lbl]{0.50} (M);
+    \end{tikzpicture}
+    \end{center}
+\end{minipage}
+
+\begin{remark}
+    Les graphes TikZ présentés ci-dessus ont été générés à partir des fichiers Mermaid produits par notre programme C, puis convertis en code LaTeX via l'assistant Gemini 3.
+\end{remark}
 
 \subsection*{Question 9 — interprétation des questions 1 à 7}
 \phantomsection
