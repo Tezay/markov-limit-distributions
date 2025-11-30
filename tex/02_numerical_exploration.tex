@@ -69,6 +69,7 @@ On observe un lissage rapide autour de \(n\approx 10\).
   \label{fig:q1_pi}
 \end{figure}
 
+
 \paragraph{(c) Existence et valeur de la distribution limite.} Le calcul supplémentaire à \(n=51\) (\texttt{data/q1/n51\_out.txt}) donne \(\Pi^{(51)} = \Pi^{(50)}\) à \(10^{-4}\) près, donc \(\Pi^{(51)} - \Pi^{(50)} \approx 0\) pour chaque composante.
 La distribution limite est donc atteinte à \(n=50\) avec les valeurs suivantes :
 \begin{align*}
@@ -163,7 +164,7 @@ Nous poussons donc à \(n = 200\).
 
     % Axes
     \draw[->] (-0.1,0) -- (2.5,0) node[below=8pt] {$n$ (log\textsubscript{10})};
-    \draw[->] (0,-0.02) -- (0,1.02) node[left=8pt] {$\Pi^{(n)}(i)$};
+    \draw[->] (0,-0.02) -- (0,0.92) node[left=8pt] {$\Pi^{(n)}(i)$};
 
     % Graduation log10 sur les x
     \foreach \x/\lbl in {
@@ -174,12 +175,12 @@ Nous poussons donc à \(n = 200\).
         2/{\small 100},
         2.3010/{\small 200}
     }{
-        \draw[gray!30] (\x,0) -- (\x,1);
+        \draw[gray!30] (\x,0) -- (\x,0.9);
         \node[below] at (\x,0) {\lbl};
     }
 
-    % Graduation sur les y de 0 à 1
-    \foreach \y in {0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0}{
+    % Graduation sur les y (0 à 0.9)
+    \foreach \y in {0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9}{
         \draw[gray!30] (0,\y) -- (2.5,\y);
         \node[left] at (0,\y) {\small \y};
     }
@@ -187,42 +188,44 @@ Nous poussons donc à \(n = 200\).
     % ---- Courbes ----
     % État 8
     \draw[blue,thick] plot coordinates {
-        (0,      1.0000)
-        (0.6990, 0.0090)
-        (1,      0.2191)
-        (1.6990, 0.2764)
-        (2,      0.3238)
-        (2.3010, 0.3214)
+        (0,      0)        % Π^(1)(8)
+        (0.6990, 0.8109)   % Π^(5)(8)
+        (1,      0.0438)   % Π^(10)(8)
+        (1.6990, 0.3261)   % Π^(50)(8)
+        (2,      0.3238)   % Π^(100)(8)
+        (2.3010, 0.3214)   % Π^(200)(8)
     };
     \node[blue] at (2.45,0.32) {\small état 8};
 
     % État 9
     \draw[red,thick] plot coordinates {
-        (0,      0.0000)
-        (0.6990, 0.1801)
-        (1,      0.7371)
-        (1.6990, 0.3975)
-        (2,      0.3537)
-        (2.3010, 0.3571)
+        (0,      0.1)      % Π^(1)(9)
+        (0.6990, 0.0270)   % Π^(5)(9)
+        (1,      0.2928)   % Π^(10)(9)
+        (1.6990, 0.3162)   % Π^(50)(9)
+        (2,      0.3537)   % Π^(100)(9)
+        (2.3010, 0.3571)   % Π^(200)(9)
     };
     \node[red] at (2.45,0.36) {\small état 9};
 
     % État 16
     \draw[purple,thick] plot coordinates {
-        (0,      0.0000)
-        (0.6990, 0.8109)
-        (1,      0.0438)
-        (1.6990, 0.3261)
-        (2,      0.3225)
-        (2.3010, 0.3214)
+        (0,      0.9)      % Π^(1)(16)
+        (0.6990, 0.1621)   % Π^(5)(16)
+        (1,      0.6634)   % Π^(10)(16)
+        (1.6990, 0.3578)   % Π^(50)(16)
+        (2,      0.3225)   % Π^(100)(16)
+        (2.3010, 0.3214)   % Π^(200)(16)
     };
-    \node[purple] at (2.45,0.31) {\small état 16};
+    \node[purple] at (2.45,0.30) {\small état 16};
 
   \end{tikzpicture}
 
-  \caption{Evolution des composantes non nulles \(\Pi^{(n)}(i)\) (départ en \(e_8\))}
-  \label{fig:q4_pi_fullscale}
+  \caption{Évolution des composantes \(\Pi^{(n)}(i)\) avec ordonnées limitées à 0.9}
+  \label{fig:q4_pi_cutY}
 \end{figure}
+
+
 
 
 Les résultats montrent alors une stabilisation à \(10^{-4}\) près. Les valeurs obtenues sont :
