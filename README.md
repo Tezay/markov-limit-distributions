@@ -53,7 +53,7 @@ markov-limit-distributions/
 ├── references.bib         # Bibliographie BibLaTeX
 ├── images/                # Illustrations (ex. matrix_proba.pdf) + vos figures
 ├── data/                  # Données
-│   ├── from_moodle/
+│   ├── moodle/
 │   │   └── matrix.txt     # Fichier fourni (matrice 27x27)
 │   └── ...                # Fichiers d'output du programme markov-graph-analyzer pour répondre aux questions
 ├── out/                   # Fichiers générés par latexmk (PDF, aux, log)

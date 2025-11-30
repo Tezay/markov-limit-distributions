@@ -9,10 +9,10 @@ Nous allons calculer \(\Pi^{(n)} = \Pi^{(0)} M^{n}\) avec \(\Pi^{(0)} = e_2\) (v
 Nous allons utiliser le programme réalisé en projet de C \texttt{markov\_analyzer} \parencite{markovGraphAnalyzer2025} qui va  reconstruire d'abord la matrice de transition \(M\) à partir du fichier fourni sur Moodle, puis calculer les distributions \(\Pi^{(n)}\) pour \(n=1,2,10,50\).
 \begin{itemize}[label=\textbullet]
   \item Arguments utilisés : \\
-  \texttt{./markov\_analyzer ---in data/moodle/matrix.txt ---dist-start 2 ---dist-steps 1} \\
-  \texttt{./markov\_analyzer ---in data/moodle/matrix.txt ---dist-start 2 ---dist-steps 2} \\
-  \texttt{./markov\_analyzer ---in data/moodle/matrix.txt ---dist-start 2 ---dist-steps 10} \\
-  \texttt{./markov\_analyzer ---in data/moodle/matrix.txt ---dist-start 2 ---dist-steps 50}
+  \texttt{./markov\_analyzer -{}-in data/moodle/matrix.txt -{}-dist-start 2 -{}-dist-steps 1} \\
+  \texttt{./markov\_analyzer -{}-in data/moodle/matrix.txt -{}-dist-start 2 -{}-dist-steps 2} \\
+  \texttt{./markov\_analyzer -{}-in data/moodle/matrix.txt -{}-dist-start 2 -{}-dist-steps 10} \\
+  \texttt{./markov\_analyzer -{}-in data/moodle/matrix.txt -{}-dist-start 2 -{}-dist-steps 50}
   \item Les sorties détaillées sont disponibles dans \texttt{data/q1/n\{1,2,10,50\}\_out.txt}; un calcul supplémentaire à \(n=51\) (\texttt{n51\_out.txt}) sert pour le test de convergence \(\Pi^{(n+1)} - \Pi^{(n)}\).
 \end{itemize}
 
@@ -71,24 +71,58 @@ On observe un lissage rapide autour de \(n\approx 10\).
 
 \paragraph{(c) Existence et valeur de la distribution limite.} Le calcul supplémentaire à \(n=51\) (\texttt{data/q1/n51\_out.txt}) donne \(\Pi^{(51)} = \Pi^{(50)}\) à \(10^{-4}\) près, donc \(\Pi^{(51)} - \Pi^{(50)} \approx 0\) pour chaque composante.
 La distribution limite est donc atteinte à \(n=50\) avec les valeurs suivantes :
-\[
-  \Pi^{(\infty)}(2)=0{,}2397,\quad
-  \Pi^{(\infty)}(5)=0{,}1953,\quad
-  \Pi^{(\infty)}(12)=0{,}2338,\quad
-  \Pi^{(\infty)}(21)=0{,}1796,\quad
-  \Pi^{(\infty)}(25)=0{,}1516,
-\]
+\begin{align*}
+  \Pi^{(\infty)}(2)&=0{,}2397, & \Pi^{(\infty)}(5)&=0{,}1953, \\
+  \Pi^{(\infty)}(12)&=0{,}2338, & \Pi^{(\infty)}(21)&=0{,}1796, \\
+  \Pi^{(\infty)}(25)&=0{,}1516,
+\end{align*}
 et les autres composantes nulles.
 
 \subsection*{Question 2 — répartition uniforme sur 2, 5, 12, 21, 25}
 \phantomsection
 \addcontentsline{toc}{subsection}{Question 2 — répartition uniforme sur 2, 5, 12, 21, 25}
-\placeholder{Analyser la convergence avec les poids initiaux égaux.}
+Pour répondre à cette question, nous avons vérifié si la distribution limite dépendait de l'état de départ parmi l'ensemble \(\{2, 5, 12, 21, 25\}\). Nous avons exécuté notre programme pour chacun de ces états avec \(n=50\) (car nous avions déduit une limite à \(n=50\) pour l'état 2):
+\begin{itemize}[label=\textbullet]
+    \item \texttt{./markov\_analyzer -{}-in data/moodle/matrix.txt -{}-dist-start 5 -{}-dist-steps 50}
+    \item \texttt{./markov\_analyzer -{}-in data/moodle/matrix.txt -{}-dist-start 12 -{}-dist-steps 50}
+    \item \texttt{./markov\_analyzer -{}-in data/moodle/matrix.txt -{}-dist-start 21 -{}-dist-steps 50}
+    \item \texttt{./markov\_analyzer -{}-in data/moodle/matrix.txt -{}-dist-start 25 -{}-dist-steps 50}
+\end{itemize}
+Les résultats numériques (fichiers \texttt{data/q2\_q3/from\_*\_out.txt}) montrent que pour tous ces états, la distribution à \(n=50\) est \textbf{identique} à celle obtenue pour l'état 2 (Question 1).
+Voici les valeurs obtenues (on assimile \(\Pi^{(50)}\) à \(\Pi^{(\infty)}\) car la convergence a été établie à \(10^{-4}\) près dès \(n=50\) à la question 1) :
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{@{}lccccc@{}}
+        \toprule
+        État \(i\) & 2 & 5 & 12 & 21 & 25 \\
+        \midrule
+        \(\Pi^{(\infty)}(i)\) & 0.2397 & 0.1953 & 0.2338 & 0.1796 & 0.1516 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Distribution limite commune pour les états de départ \{2, 5, 12, 21, 25\}.}
+    \label{tab:q2_limit}
+\end{table}
+
+Puisque la distribution initiale est uniforme (\(\Pi^{(0)} = \frac{1}{5}e_2 + \frac{1}{5}e_5 + \frac{1}{5}e_{12} + \frac{1}{5}e_{21} + \frac{1}{5}e_{25}\)), par linéarité de la multiplication matricielle :
+\[
+\Pi^{(\infty)} = \frac{1}{5}\Pi^{(\infty)}_2 + \frac{1}{5}\Pi^{(\infty)}_5 + \frac{1}{5}\Pi^{(\infty)}_{12} + \frac{1}{5}\Pi^{(\infty)}_{21} + \frac{1}{5}\Pi^{(\infty)}_{25} = \frac{1}{5}(5 \times \Pi_{lim}) = \Pi_{lim}
+\]
+\textbf{Conclusion :} Il existe une distribution limite, et c'est exactement la même que celle trouvée à la Question 1.
 
 \subsection*{Question 3 — répartition aléatoire sur 2, 5, 12, 21, 25}
 \phantomsection
 \addcontentsline{toc}{subsection}{Question 3 — répartition aléatoire sur 2, 5, 12, 21, 25}
-\placeholder{Étudier la sensibilité de la distribution limite aux paramètres \(a,b,c,d,e\).}
+Soit une distribution initiale aléatoire répartie sur ces mêmes états :
+\[
+\Pi^{(0)} = a e_2 + b e_5 + c e_{12} + d e_{21} + e e_{25} \quad \text{avec} \quad a+b+c+d+e=1
+\]
+Nous avons établi expérimentalement que \(\lim_{n \to \infty} e_i M^n = \Pi_{lim}\) pour tout \(i \in \{2, 5, 12, 21, 25\}\).
+Par linéarité :
+\[
+\lim_{n \to \infty} \Pi^{(0)} M^n = a \Pi_{lim} + b \Pi_{lim} + c \Pi_{lim} + d \Pi_{lim} + e \Pi_{lim} = (a+b+c+d+e) \Pi_{lim} = \Pi_{lim}
+\]
+\textbf{Conclusion :} La distribution limite existe et est \textbf{indépendante} des paramètres initiaux \(a, b, c, d, e\). Elle reste identique à celle de la Question 1.
 
 \subsection*{Question 4 — états 8, 9, 16}
 \phantomsection

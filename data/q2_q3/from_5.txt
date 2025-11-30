@@ -1,0 +1,43 @@
+[Markov][OK] Toutes les lignes sortantes somment à 1 (eps=0.010).
+[OK] Graphe valide (Markov) avec eps=0.0100
+[Partition] 8 classe(s)
+  C1: {11, 18, 4, 26, 27, 1}
+  C2: {5, 12, 21, 25, 2}
+  C3: {6, 20, 17}
+  C4: {7, 23, 3}
+  C5: {16, 9, 8}
+  C6: {14}
+  C7: {19, 22, 24, 10}
+  C8: {15, 13}
+[Hasse] 6 lien(s)
+  C4 -> C3
+  C8 -> C4
+  C6 -> C5
+  C6 -> C2
+  C8 -> C1
+  C7 -> C6
+[Classes] transitoire/persistante:
+  C1: persistante
+  C2: persistante
+  C3: persistante
+  C4: transitoire
+  C5: persistante
+  C6: transitoire
+  C7: transitoire
+  C8: transitoire
+[Graphe] Non irréductible
+[Absorbants] aucun
+[OK] Export Mermaid (graphe) -> /Users/user/Documents/Programming/markov-graph-analyzer/out/mermaid/graph.mmd
+[OK] Export Mermaid (Hasse) -> /Users/user/Documents/Programming/markov-graph-analyzer/out/mermaid/hasse.mmd
+[Matrix] Recherche convergence diff(M^n, M^{n-1}) < 0.0100 (max 30 itérations)
+  -> Non atteint (n=31)
+[Distribution] après 50 étape(s) en partant de 5 : [0.0000, 0.2397, 0.0000, 0.0000, 0.1953, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.2338, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.1796, 0.0000, 0.0000, 0.0000, 0.1516, 0.0000, 0.0000]
+[Stationnaire] Par classe (persistante => distribution limite, transitoire => 0)
+  C1: persistante -> [0.1112, 0.1112, 0.2777, 0.1112, 0.1112, 0.2777] (converge)
+  C2: persistante -> [0.1944, 0.2332, 0.1806, 0.1520, 0.2398] (converge)
+  C3: persistante -> [0.3333, 0.3333, 0.3333] (converge)
+  C4: transitoire -> [0.0, 0.0, 0.0]
+  C5: persistante -> [0.3260, 0.3543, 0.3197] (non convergé)
+  C6: transitoire -> [0.0]
+  C7: transitoire -> [0.0, 0.0, 0.0, 0.0]
+  C8: transitoire -> [0.0, 0.0]
