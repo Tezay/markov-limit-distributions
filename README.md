@@ -51,12 +51,13 @@ markov-limit-distributions/
 │   ├── 05_conclusion.tex
 │   └── appendix.tex       # Annexes (code, figures)
 ├── references.bib         # Bibliographie BibLaTeX
-├── images/                # Illustrations (ex. matrix_proba.pdf) + vos figures
 ├── data/                  # Données
 │   ├── moodle/
 │   │   └── matrix.txt     # Fichier fourni (matrice 27x27)
 │   └── ...                # Fichiers d'output du programme markov-graph-analyzer pour répondre aux questions
 ├── out/                   # Fichiers générés par latexmk (PDF, aux, log)
+├── markov_analyzer        # Exécutable Mach-O (macOS)
+├── markov_analyzer.exe    # Exécutable PE (Windows)
 ├── .latexmkrc             # Configuration latexmk (sortie out/, biber)
 └── .vscode/settings.json  # VS Code LaTeX Workshop : sortie out/
 ```
