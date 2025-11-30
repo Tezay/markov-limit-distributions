@@ -124,10 +124,125 @@ Par linéarité :
 \]
 \textbf{Conclusion :} La distribution limite existe et est \textbf{indépendante} des paramètres initiaux \(a, b, c, d, e\). Elle reste identique à celle de la Question 1.
 
-\subsection*{Question 4 — états 8, 9, 16}
+\subsection*{Question 4 — états 8, 9 et 16}
 \phantomsection
-\addcontentsline{toc}{subsection}{Question 4 — états 8, 9, 16}
-\placeholder{Comparer départ en 8 vs. mélange uniforme vs. mélange aléatoire.}
+\addcontentsline{toc}{subsection}{Question 4 — états 8, 9 et 16}
+
+\textbf{Etude de la convergence pour l'état 8 :}
+
+Pour cette question, nous appliquons la même méthodologie que précédemment, en partant cette fois de l'état \(8\).
+
+Nous avons exécuté successivement les commandes suivantes :
+
+\begin{itemize}[label=\textbullet]
+    \item \texttt{./markov\_analyzer --in data/moodle/matrix.txt --dist-start 8 --dist-steps 10}
+    \item \texttt{./markov\_analyzer --in data/moodle/matrix.txt --dist-start 8 --dist-steps 50}
+    \item \texttt{./markov\_analyzer --in data/moodle/matrix.txt --dist-start 8 --dist-steps 51}
+\end{itemize}
+
+Les résultats (\texttt{data/q4/q4\_out\_step1.txt}) montrent une convergence progressive, mais aucune limite n'est encore atteinte.  
+Nous augmentons donc à \(n = 100\).
+
+\begin{itemize}[label=\textbullet]
+    \item \texttt{./markov\_analyzer --in data/moodle/matrix.txt --dist-start 8 --dist-steps 100}
+    \item \texttt{./markov\_analyzer --in data/moodle/matrix.txt --dist-start 8 --dist-steps 101}
+\end{itemize}
+
+Bien que la distribution continue de converger, aucune limite n'est atteinte à \(n = 100\).  
+Nous poussons donc à \(n = 200\).
+
+\begin{itemize}[label=\textbullet]
+    \item \texttt{./markov\_analyzer --in data/moodle/matrix.txt --dist-start 8 --dist-steps 200}
+    \item \texttt{./markov\_analyzer --in data/moodle/matrix.txt --dist-start 8 --dist-steps 201}
+\end{itemize}
+
+Les résultats montrent alors une stabilisation à \(10^{-4}\) près. Les valeurs obtenues sont :
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{@{}lccc@{}}
+        \toprule
+        État \(i\) & 8 & 9 & 16 \\
+        \midrule
+        \(\Pi^{(\infty)}(i)\) & 0.3214 & 0.3571 & 0.3214 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Distribution limite obtenue à partir de l'état 8.}
+\end{table}
+
+\textbf{Conclusion :} L'état \(8\) admet une distribution limite. La convergence est atteinte numériquement dès \(n=200\).
+
+% ------------------------------------------------------------
+\vspace{2\baselineskip}
+
+\textbf{Répartition uniforme sur les états 8, 9 et 16 :}
+
+Nous considérons maintenant une distribution initiale uniforme :
+\[
+\Pi^{(0)} = \frac{1}{3} e_8 + \frac{1}{3} e_9 + \frac{1}{3} e_{16}.
+\]
+
+Nous exécutons les commandes :
+
+\begin{itemize}[label=\textbullet]
+    \item \texttt{./markov\_analyzer --in data/moodle/matrix.txt --dist-start 8 --dist-steps 200}
+    \item \texttt{./markov\_analyzer --in data/moodle/matrix.txt --dist-start 9 --dist-steps 200}
+    \item \texttt{./markov\_analyzer --in data/moodle/matrix.txt --dist-start 16 --dist-steps 200}
+\end{itemize}
+
+Les résultats (\texttt{data/q4/q4\_out\_step1.txt}) montrent que les trois états conduisent à la même distribution limite :
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{@{}lccc@{}}
+        \toprule
+        État \(i\) & 8 & 9 & 16 \\
+        \midrule
+        \(\Pi^{(\infty)}(i)\) & 0.3214 & 0.3571 & 0.3214 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Distribution limite commune pour les états de départ \{8, 9, 16\}.}
+\end{table}
+
+Par linéarité :
+
+\[
+\Pi^{(\infty)}
+= \tfrac{1}{3}\Pi_{8}^{(\infty)}
++ \tfrac{1}{3}\Pi_{9}^{(\infty)}
++ \tfrac{1}{3}\Pi_{16}^{(\infty)}
+= \tfrac{1}{3}(3\Pi_{lim})
+= \Pi_{lim}.
+\]
+
+\textbf{Conclusion :} Il existe bien un distribution limite pour un système uniformément réparti entre les états 8, 9 et 16.
+
+% ------------------------------------------------------------
+\vspace{2\baselineskip}
+
+\textbf{Répartition aléatoire sur les états 8, 9 et 16 :}
+
+On considère maintenant une distribution initiale générale :
+\[
+\Pi^{(0)} = a*e_8 + b*e_9 + c*e_{16}, \qquad a+b+c = 1.
+\]
+
+D'après les résultats précédents :
+\[
+\lim_{n\to\infty} e_i M^n = \Pi_{lim}, \quad \forall\, i\in\{8,9,16\}.
+\]
+
+Alors, par linéarité :
+\[
+\lim_{n\to\infty} \Pi^{(0)} M^n
+= a \Pi_{lim} + b \Pi_{lim} + c \Pi_{lim}
+= (a+b+c)\Pi_{lim}
+= \Pi_{lim}.
+\]
+
+\textbf{Conclusion :} La distribution limite existe pour toute distribution initiale sur \(\{8, 9, 16\}\).  
+Elle est indépendante des coefficients initiaux \(a, b, c\).
+
 
 \subsection*{Question 5 — états 10, 14, 19, 22, 24}
 \phantomsection
