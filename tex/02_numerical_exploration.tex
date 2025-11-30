@@ -135,26 +135,95 @@ Pour cette question, nous appliquons la même méthodologie que précédemment, 
 Nous avons exécuté successivement les commandes suivantes :
 
 \begin{itemize}[label=\textbullet]
-    \item \texttt{./markov\_analyzer --in data/moodle/matrix.txt --dist-start 8 --dist-steps 10}
-    \item \texttt{./markov\_analyzer --in data/moodle/matrix.txt --dist-start 8 --dist-steps 50}
-    \item \texttt{./markov\_analyzer --in data/moodle/matrix.txt --dist-start 8 --dist-steps 51}
+    \item \texttt{./markov\_analyzer -{}-in data/moodle/matrix.txt -{}-dist-start 8 -{}-dist-steps 10}
+    \item \texttt{./markov\_analyzer -{}-in data/moodle/matrix.txt -{}-dist-start 8 -{}-dist-steps 50}
+    \item \texttt{./markov\_analyzer -{}-in data/moodle/matrix.txt -{}-dist-start 8 -{}-dist-steps 51}
 \end{itemize}
 
 Les résultats (\texttt{data/q4/q4\_out\_step1.txt}) montrent une convergence progressive, mais aucune limite n'est encore atteinte.  
 Nous augmentons donc à \(n = 100\).
 
 \begin{itemize}[label=\textbullet]
-    \item \texttt{./markov\_analyzer --in data/moodle/matrix.txt --dist-start 8 --dist-steps 100}
-    \item \texttt{./markov\_analyzer --in data/moodle/matrix.txt --dist-start 8 --dist-steps 101}
+    \item \texttt{./markov\_analyzer -{}-in data/moodle/matrix.txt -{}-dist-start 8 -{}-dist-steps 100}
+    \item \texttt{./markov\_analyzer -{}-in data/moodle/matrix.txt -{}-dist-start 8 -{}-dist-steps 101}
 \end{itemize}
 
 Bien que la distribution continue de converger, aucune limite n'est atteinte à \(n = 100\).  
 Nous poussons donc à \(n = 200\).
 
 \begin{itemize}[label=\textbullet]
-    \item \texttt{./markov\_analyzer --in data/moodle/matrix.txt --dist-start 8 --dist-steps 200}
-    \item \texttt{./markov\_analyzer --in data/moodle/matrix.txt --dist-start 8 --dist-steps 201}
+    \item \texttt{./markov\_analyzer -{}-in data/moodle/matrix.txt -{}-dist-start 8 -{}-dist-steps 200}
+    \item \texttt{./markov\_analyzer -{}-in data/moodle/matrix.txt -{}-dist-start 8 -{}-dist-steps 201}
 \end{itemize}
+
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[xscale=3.5,yscale=8]
+
+    % Axes
+    \draw[->] (-0.1,0) -- (2.5,0) node[below=8pt] {$n$ (log\textsubscript{10})};
+    \draw[->] (0,-0.02) -- (0,1.02) node[left=8pt] {$\Pi^{(n)}(i)$};
+
+    % Graduation log10 sur les x
+    \foreach \x/\lbl in {
+        0/{\small 1},
+        0.6990/{\small 5},
+        1/{\small 10},
+        1.6990/{\small 50},
+        2/{\small 100},
+        2.3010/{\small 200}
+    }{
+        \draw[gray!30] (\x,0) -- (\x,1);
+        \node[below] at (\x,0) {\lbl};
+    }
+
+    % Graduation sur les y de 0 à 1
+    \foreach \y in {0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0}{
+        \draw[gray!30] (0,\y) -- (2.5,\y);
+        \node[left] at (0,\y) {\small \y};
+    }
+
+    % ---- Courbes ----
+    % État 8
+    \draw[blue,thick] plot coordinates {
+        (0,      1.0000)
+        (0.6990, 0.0090)
+        (1,      0.2191)
+        (1.6990, 0.2764)
+        (2,      0.3238)
+        (2.3010, 0.3214)
+    };
+    \node[blue] at (2.45,0.32) {\small état 8};
+
+    % État 9
+    \draw[red,thick] plot coordinates {
+        (0,      0.0000)
+        (0.6990, 0.1801)
+        (1,      0.7371)
+        (1.6990, 0.3975)
+        (2,      0.3537)
+        (2.3010, 0.3571)
+    };
+    \node[red] at (2.45,0.36) {\small état 9};
+
+    % État 16
+    \draw[purple,thick] plot coordinates {
+        (0,      0.0000)
+        (0.6990, 0.8109)
+        (1,      0.0438)
+        (1.6990, 0.3261)
+        (2,      0.3225)
+        (2.3010, 0.3214)
+    };
+    \node[purple] at (2.45,0.31) {\small état 16};
+
+  \end{tikzpicture}
+
+  \caption{Evolution des composantes non nulles \(\Pi^{(n)}(i)\) (départ en \(e_8\))}
+  \label{fig:q4_pi_fullscale}
+\end{figure}
+
 
 Les résultats montrent alors une stabilisation à \(10^{-4}\) près. Les valeurs obtenues sont :
 
@@ -185,9 +254,9 @@ Nous considérons maintenant une distribution initiale uniforme :
 Nous exécutons les commandes :
 
 \begin{itemize}[label=\textbullet]
-    \item \texttt{./markov\_analyzer --in data/moodle/matrix.txt --dist-start 8 --dist-steps 200}
-    \item \texttt{./markov\_analyzer --in data/moodle/matrix.txt --dist-start 9 --dist-steps 200}
-    \item \texttt{./markov\_analyzer --in data/moodle/matrix.txt --dist-start 16 --dist-steps 200}
+    \item \texttt{./markov\_analyzer -{}-in data/moodle/matrix.txt -{}-dist-start 8 -{}-dist-steps 200}
+    \item \texttt{./markov\_analyzer -{}-in data/moodle/matrix.txt -{}-dist-start 9 -{}-dist-steps 200}
+    \item \texttt{./markov\_analyzer -{}-in data/moodle/matrix.txt -{}-dist-start 16 -{}-dist-steps 200}
 \end{itemize}
 
 Les résultats (\texttt{data/q4/q4\_out\_step1.txt}) montrent que les trois états conduisent à la même distribution limite :
