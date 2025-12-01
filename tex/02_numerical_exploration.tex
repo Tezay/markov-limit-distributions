@@ -319,7 +319,181 @@ Elle est indépendante des coefficients initiaux \(a, b, c\).
 \subsection*{Question 5 — états 10, 14, 19, 22, 24}
 \phantomsection
 \addcontentsline{toc}{subsection}{Question 5 — états 10, 14, 19, 22, 24}
-\placeholder{Identifier les comportements limites selon les trois répartitions demandées.}
+
+\paragraph{Étude de la convergence pour l'état 14.}
+Pour cette question, nous appliquons la même méthodologie que précédemment, en considérant cette fois l’état \(14\).
+
+Nous avons exécuté les commandes suivantes, pour différentes puissances \(n\) :
+
+\begin{itemize}[label=\textbullet]
+    \item \texttt{./markov\_analyzer -{}-in data/moodle/matrix.txt -{}-dist-start 14 -{}-dist-steps 10}
+    \item \texttt{./markov\_analyzer -{}-in data/moodle/matrix.txt -{}-dist-start 14 -{}-dist-steps 50}
+    \item \texttt{./markov\_analyzer -{}-in data/moodle/matrix.txt -{}-dist-start 14 -{}-dist-steps 51}
+    \item \texttt{./markov\_analyzer -{}-in data/moodle/matrix.txt -{}-dist-start 14 -{}-dist-steps 100}
+    \item \texttt{./markov\_analyzer -{}-in data/moodle/matrix.txt -{}-dist-start 14 -{}-dist-steps 101}
+    \item \texttt{./markov\_analyzer -{}-in data/moodle/matrix.txt -{}-dist-start 14 -{}-dist-steps 200}
+\end{itemize}
+
+Les résultats (\texttt{data/q5/q5\_out\_step1.txt}) montrent qu’à \(n=100\), la distribution est stabilisée à \(10^{-4}\) près.  
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[xscale=4.2,yscale=27]  % hauteur réduite d’un tiers
+
+    % Axes
+    \draw[->] (-0.1,0) -- (2.3,0) node[below] {$n$ (log\textsubscript{10})};
+    \draw[->] (0,-0.005) -- (0,0.205) node[left] {$\Pi^{(n)}(i)$};
+
+    % Grille / repères en x
+    \foreach \x/\lbl in {
+        0/{\small 1},
+        0.6990/{\small 5},
+        1/{\small 10},
+        1.6990/{\small 50},
+        2/{\small 100}
+    }{
+      \draw[gray!30] (\x,0) -- (\x,0.20);
+      \node[below] at (\x,0) {\lbl};
+    }
+
+    % Grille / repères en y (0 à 0.2)
+    \foreach \y in {0.05,0.10,0.15,0.20}{
+        \draw[gray!30] (0,\y) -- (2.2,\y);
+        \node[left] at (0,\y) {\small \y};
+    }
+
+    % ---- Courbes ----
+
+    % Etat 2
+    \draw[blue,thick] plot coordinates {
+      (0,0.1500) (0.6990,0.1204) (1,0.1198) (1.6990,0.1198) (2,0.1198)
+    };
+    \node[blue] at (2.23,0.122) {\small état 2};
+
+    % Etat 5
+    \draw[teal!70!black,thick] plot coordinates {
+      (0,0.1000) (0.6990,0.0981) (1,0.0977) (1.6990,0.0977) (2,0.0977)
+    };
+    \node[teal!70!black] at (2.23,0.10) {\small état 5};
+
+    % Etat 8
+    \draw[purple,thick] plot coordinates {
+      (0,0.1400) (0.6990,0.1561) (1,0.1637) (1.6990,0.1608) (2,0.1607)
+    };
+    \node[purple] at (2.23,0.165) {\small état 8};
+
+    % Etat 9
+    \draw[red,thick] plot coordinates {
+      (0,0.1500) (0.6990,0.1816) (1,0.1781) (1.6990,0.1789) (2,0.1786)
+    };
+    \node[red] at (2.23,0.185) {\small état 9};
+
+    % Etat 12
+    \draw[orange!80!black,thick] plot coordinates {
+      (0,0.0600) (0.6990,0.1163) (1,0.1169) (1.6990,0.1169) (2,0.1169)
+    };
+    \node[orange!80!black] at (2.23,0.119) {\small état 12};
+
+    % Etat 14
+    \draw[brown!80!black,thick] plot coordinates {
+      (0,0.1600) (0.6990,0.0041) (1,0.0000) (1.6990,0.0000) (2,0.0000)
+    };
+    \node[brown!80!black] at (2.23,0.02) {\small état 14};
+
+    % Etat 16
+    \draw[magenta,thick] plot coordinates {
+      (0,0.1300) (0.6990,0.1602) (1,0.1581) (1.6990,0.1603) (2,0.1607)
+    };
+    \node[magenta] at (2.23,0.155) {\small état 16};
+
+    % Etat 21
+    \draw[cyan!60!black,thick] plot coordinates {
+      (0,0.0400) (0.6990,0.0883) (1,0.0898) (1.6990,0.0898) (2,0.0898)
+    };
+    \node[cyan!60!black] at (2.23,0.09) {\small état 21};
+
+    % Etat 25
+    \draw[violet,thick] plot coordinates {
+      (0,0.0700) (0.6990,0.0750) (1,0.0758) (1.6990,0.0758) (2,0.0758)
+    };
+    \node[violet] at (2.23,0.078) {\small état 25};
+
+  \end{tikzpicture}
+
+  \caption{Évolution des composantes non nulles \(\Pi^{(n)}(i)\).}
+  \label{fig:q5_pi_zoom_small}
+\end{figure}
+
+
+
+
+Les composantes non nulles observées sont les suivantes :
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{@{}lcccccccc@{}}
+        \toprule
+        État \(i\) & 2 & 5 & 8 & 9 & 12 & 16 & 21 & 25 \\
+        \midrule
+        \(\Pi^{(100)}(i)\) 
+        & 0.1198 & 0.0977 & 0.1607 & 0.1786 & 0.1169 & 0.1607 & 0.0898 & 0.0758 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Distribution limite obtenue à partir de l'état 14.}
+\end{table}
+
+
+\textbf{Conclusion :}  
+L'état \(14\) admet une distribution limite, atteinte numériquement à \(n=100\).
+
+% ------------------------------------------------------------------
+
+\paragraph{Répartition uniforme sur les états 10, 14, 19, 22, 24.}
+Nous considérons maintenant une distribution initiale uniforme :
+\[
+\Pi^{(0)} = \frac{1}{5}(e_{10} + e_{14} + e_{19} + e_{22} + e_{24}).
+\]
+
+Les sorties numériques (\texttt{data/q5/q5\_out\_step1.txt}) montrent que :
+
+- les états 14, 19 et 24 convergent vers la \emph{même} distribution limite,\\
+- les états 10 et 22 convergent vers des limites différentes,\\
+- toutes les distributions ont les mêmes composantes non nulles : \(\{2,5,8,9,12,16,21,25\}\).
+
+Les distributions limites observées sont :
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{@{}lcccccccc@{}}
+        \toprule
+        État \(i\) & 2 & 5 & 8 & 9 & 12 & 16 & 21 & 25 \\
+        \midrule
+        \(\Pi^{(\infty)}_{14}(i)=\Pi^{(\infty)}_{19}(i)=\Pi^{(\infty)}_{24}(i)\)
+        & 0.1198 & 0.0977 & 0.1610 & 0.1782 & 0.1169 & 0.1608 & 0.0898 & 0.0758 \\
+        \(\Pi^{(\infty)}_{10}(i)\)
+        & 0.1598 & 0.1302 & 0.1073 & 0.1188 & 0.1559 & 0.1072 & 0.1197 & 0.1011 \\
+        \(\Pi^{(\infty)}_{22}(i)\)
+        & 0.0799 & 0.0651 & 0.2145 & 0.2392 & 0.0779 & 0.2129 & 0.0599 & 0.0505 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Distributions limites respectives pour les états 10, 14, 19, 22, 24.}
+\end{table}
+
+\textbf{Conclusion :}  
+Toutes les limites ne sont pas identiques :  
+
+Par conséquent pour une distribution aléatoire :
+$$
+\Pi^{(\infty)} = a \cdot \Pi_{10}^{(\infty)} + b \cdot \Pi_{14}^{(\infty)} + c \cdot \Pi_{19}^{(\infty)} + d \cdot \Pi_{22}^{(\infty)} + e \cdot \Pi_{24}^{(\infty)}
+$$
+
+\paragraph{\[
+\Pi^{(\infty)} \text{ dépend des paramètres initiaux } a,b,c,d,e.
+\]}
+\paragraph{Il est également important de noter que les composantes de départ {10, 14, 19, 22, 24} à la limite sont nulles, contrairement aux cas précédents.}
+
+% ---------------------------------------------------------
+
 
 \subsection*{Question 6 — états 6, 17, 20}
 \phantomsection
