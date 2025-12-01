@@ -495,11 +495,118 @@ $$
 % ---------------------------------------------------------
 
 
-\subsection*{Question 6 — états 6, 17, 20}
-\phantomsection
-\addcontentsline{toc}{subsection}{Question 6 — états 6, 17, 20}
-\placeholder{Documenter les trajectoires de \(\Pi^{(n)}\) et la présence/absence de limite.}
+\subsection*{Question 6 : états 6, 17 et 20}
 
+\paragraph{Étude de la convergence pour l'état 6}
+Pour étudier le comportement asymptotique de cette classe d'états, nous appliquons la même méthodologie que précédemment en partant de l'état 6. Nous calculons $\Pi^{(n)}$ pour plusieurs étapes successives afin de détecter une éventuelle stabilisation ou un comportement cyclique.
+
+Nous avons exécuté les commandes suivantes :
+\begin{verbatim}
+./markov_analyzer --in data/moodle/matrix.txt --dist-start 6 --dist-steps 50
+./markov_analyzer --in data/moodle/matrix.txt --dist-start 6 --dist-steps 51
+./markov_analyzer --in data/moodle/matrix.txt --dist-start 6 --dist-steps 52
+\end{verbatim}
+
+
+
+\paragraph{Analyse des résultats numériques}
+Contrairement aux questions précédentes, les fichiers de sortie (\texttt{data/q6/q6\_step*.txt}) ne montrent \textbf{aucune stabilisation} des probabilités. Nous observons une oscillation périodique de la masse de probabilité :
+
+\begin{itemize}
+    \item Pour $n=50$ : La probabilité est concentrée à $100\%$ sur l'état \textbf{20}.
+    \item Pour $n=51$ : La probabilité est concentrée à $100\%$ sur l'état \textbf{6}.
+    \item Pour $n=52$ : La probabilité est concentrée à $100\%$ sur l'état \textbf{17}.
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  % Utilisation d'une échelle linéaire (xscale) pour maximiser la visibilité
+  \begin{tikzpicture}[xscale=5,yscale=5] 
+
+    % Constantes de temps (n)
+    \pgfmathsetmacro{\nfifty}{50}
+    \pgfmathsetmacro{\nfiftyone}{51}
+    \pgfmathsetmacro{\nfiftytwo}{52}
+
+    % Décalage pour commencer à n=50
+    % On décale toutes les coordonnées x pour que n=50 soit à la position 0.1 de l'axe réel.
+    \pgfmathsetmacro{\startpos}{0.1}
+    \pgfmathsetmacro{\xshift}{\startpos - \nfifty} 
+    
+    % Axes
+    % L'axe des X s'étend légèrement au-delà de n=52
+    \draw[->] (\startpos - 0.05,0) -- (\nfiftytwo + \xshift + 0.1,0) node[below] {$n$}; 
+    % L'axe des Y est tracé à la position de n=50
+    \draw[->] (\startpos,-0.005) -- (\startpos,1.1) node[left] {$\Pi^{(n)}(i)$}; 
+
+    % Grille / repères en x (Commence à n=50)
+    % On utilise \x + \xshift pour repositionner les labels
+    \foreach \x/\lbl in {
+        \nfifty/{\small 50},
+        \nfiftyone/{\small 51}, 
+        \nfiftytwo/{\small 52}
+    }{
+      \draw[gray!30] (\x + \xshift,0) -- (\x + \xshift,1.0);
+      \node[below,yshift=-2pt] at (\x + \xshift,0) {\lbl};
+    }
+    
+    % Grille / repères en y (0 à 1.0)
+    \foreach \y in {0.2,0.4,0.6,0.8,1.0}{
+        \draw[gray!30] (\startpos,\y) -- (\nfiftytwo + \xshift + 0.05,\y);
+        \node[left] at (\startpos,\y) {\small \y};
+    }
+
+    % ---- Courbes ----
+    % Les coordonnées sont calculées avec l'ajustement \x + \xshift
+    
+    % Etat 6 (Bleu) - Pic à n=51
+    \draw[blue,thick] plot coordinates {
+      (\nfifty + \xshift,0.00) (\nfiftyone + \xshift,1.00) (\nfiftytwo + \xshift,0.00)
+    };
+    \node[blue, right] at (\nfiftytwo + \xshift + 0.05,0.05) {\small état 6};
+
+    % Etat 17 (Rouge) - Pic à n=52
+    \draw[red,thick] plot coordinates {
+      (\nfifty + \xshift,0.00) (\nfiftyone + \xshift,0.00) (\nfiftytwo + \xshift,1.00)
+    };
+    \node[red, right] at (\nfiftytwo + \xshift + 0.05,1.00) {\small état 17};
+
+    % Etat 20 (Vert/Teal) - Pic à n=50
+    \draw[teal!70!black,thick] plot coordinates {
+      (\nfifty + \xshift,1.00) (\nfiftyone + \xshift,0.00) (\nfiftytwo + \xshift,0.00)
+    };
+    \node[teal!70!black, right] at (\nfiftytwo + \xshift + 0.05,0.15) {\small état 20};
+
+  \end{tikzpicture}
+
+  \caption{Évolution détaillée des probabilités pour la classe $\{6, 17, 20\}$ entre $n=50$ et $n=52$ sur une échelle linéaire. Le graphique montre le cycle déterministe $\mathbf{20 \to 6 \to 17}$ qui confirme la périodicité $d=3$.}
+  \label{fig:q6_cycle_lineaire}
+\end{figure}
+
+Ce comportement s'explique par la structure du graphe : ces trois états forment un cycle déterministe $6 \to 17 \to 20 \to 6 \dots$ avec des probabilités de transition de $1$.
+La condition de convergence de Cauchy $\Pi^{(n+1)} - \Pi^{(n)} \approx 0$ n'est jamais vérifiée car la distance entre deux distributions successives reste maximale.
+
+\paragraph{Répartition uniforme sur les états 6, 17 et 20}
+Nous testons si une distribution initiale uniforme permet de stabiliser le système. Soit :
+$$ \Pi^{(0)} = \frac{1}{3}e_{6} + \frac{1}{3}e_{17} + \frac{1}{3}e_{20} $$
+
+Or comme chaque état envoie 100\% de sa masse au suivant:
+\begin{itemize}
+    \item La part en $e_6$ se déplace vers $e_{17}$.
+    \item La part en $e_{17}$ se déplace vers $e_{20}$.
+    \item La part en $e_{20}$ se déplace vers $e_{6}$.
+\end{itemize}
+
+On obtient $\Pi^{(1)} = \frac{1}{3}e_{17} + \frac{1}{3}e_{20} + \frac{1}{3}e_{6} = \Pi^{(0)}$.
+La distribution reste invariante au cours du temps.
+
+De la même manière, pour toute combinaison linéaire initiale de la forme :
+$$ \Pi^{(0)} = a \cdot e_{6} + b \cdot e_{17} + c \cdot e_{20} $$
+
+\paragraph{Conclusion}
+Contrairement aux classes étudiées dans les questions 1 à 5, la classe $\{6, 17, 20\}$ \textbf{n'admet pas de distribution limite} au sens strict (pas de convergence $\lim_{n \to \infty} \Pi^{(n)}$) pour un état de départ arbitraire, en raison de sa périodicité (période $d=3$).
+
+Cependant, elle admet une \textbf{distribution stationnaire} unique $\Pi_{stat} = (\frac{1}{3}, \frac{1}{3}, \frac{1}{3})$ sur ces états. Le système ne converge vers cette distribution que si l'on part d'une configuration initiale spécifique (combinaison linéaire précise), mais oscille indéfiniment sinon.
 \subsection*{Question 7 — états 3, 7, 23}
 \phantomsection
 \addcontentsline{toc}{subsection}{Question 7 — états 3, 7, 23}
