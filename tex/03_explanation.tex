@@ -277,7 +277,55 @@ Le graphe réduit montre les relations d'accessibilité entre les classes. Les c
 \subsection*{Question 9 — interprétation des questions 1 à 7}
 \phantomsection
 \addcontentsline{toc}{subsection}{Question 9 — interprétation des questions 1 à 7}
-\placeholder{Mettre en regard les trajectoires de \(\Pi^{(n)}\) avec la structure du graphe réduit : quelles classes sont atteintes, quelles périodes expliquent les oscillations, comment les distributions limites se composent.}
+Nous pouvons maintenant réinterpréter l'ensemble des résultats numériques des questions 1 à 7 grâce aux classes communicantes établies à la question 8 (Figure~\ref{fig:hasse}).
+L'analyse du graphe et des classes permet d'expliquer intuitivement les comportements observés (stabilisation, oscillation ou disparition).
+
+\begin{description}
+    \item[- Questions 1, 2 et 3 : La classe finale C2] \hfill \\
+    Les états $\{2, 5, 12, 21, 25\}$ forment la classe \textbf{C2}.
+    D'après l'analyse de la question 8, cette classe est \textbf{finale} : une fois que le système entre dans cet ensemble d'états, il ne peut plus en sortir (aucune flèche ne quitte C2).
+    De plus, elle est \textbf{apériodique} (période $d=1$), ce qui signifie qu'il n'y a pas de cycle forcé qui empêcherait la stabilisation.
+    Le système finit donc par se "mélanger" complètement à l'intérieur de cette classe, ce qui conduit à une distribution d'équilibre unique.
+    Cela explique pourquoi :
+    \begin{itemize}
+        \item À la question 1, (départ en 2) les probabilités se stabilisent vers des valeurs fixes.
+        \item À la question 2, peu importe l'état de départ dans la classe, le mélange conduit au même équilibre final.
+        \item À la question 3, toute répartition initiale sur ces états converge vers cette même limite.
+    \end{itemize}
+
+    \item[- Question 4 : La classe finale C5] \hfill \\
+    Les états $\{8, 9, 16\}$ constituent la classe \textbf{C5}.
+    Comme pour C2, cette classe est \textbf{finale} (on ne peut pas en sortir) et \textbf{apériodique}.
+    Elle se comporte comme un système isolé qui possède son propre équilibre interne.
+    C'est ce que nous avons observé : en partant de n'importe quel état de ce groupe, le système se stabilise vers une distribution limite propre à C5, indépendante de ce qui se passe ailleurs dans le graphe.
+
+    \item[- Question 5 : Les classes transitoires C6 et C7] \hfill \\
+    Les états $\{10, 14, 19, 22, 24\}$ appartiennent aux classes \textbf{C6} ($\{14\}$) et \textbf{C7} ($\{10, 19, 22, 24\}$).
+    Ces classes sont \textbf{transitoires} : le diagramme de Hasse montre que des flèches permettent de quitter définitivement ces ensembles.
+    \begin{itemize}
+        \item De \textbf{C7}, on descend vers \textbf{C6}.
+        \item De \textbf{C6} (état 14), le système peut "tomber" soit dans la classe finale \textbf{C2}, soit dans la classe finale \textbf{C5}.
+    \end{itemize}
+    Une fois parti vers C2 ou C5, le système ne revient jamais.
+    Cela explique deux choses :
+    \begin{enumerate}
+        \item La probabilité d'être dans les états de C6 et C7 tend vers 0 (le système se vide de ces états).
+        \item L'état final dépend du "chemin" pris : selon l'état de départ, on a plus ou moins de chances de finir piégé dans C2 ou dans C5. C'est pourquoi la distribution limite observée est un mélange des limites de C2 et C5, pondéré par les chances d'atterrir dans l'une ou l'autre.
+    \end{enumerate}
+
+    \item[- Question 6 : La classe finale périodique C3] \hfill \\
+    Les états $\{6, 17, 20\}$ forment la classe \textbf{C3}.
+    Cette classe est \textbf{finale} (on ne peut pas en sortir) mais elle possède une structure particulière : c'est un cycle pur de longueur 3 ($20 \to 6 \to 17 \to 20 \dots$).
+    Le système est contraint de tourner en rond indéfiniment.
+    Cela explique pourquoi nous n'avons pas observé de stabilisation vers une valeur fixe (convergence), mais une oscillation perpétuelle des probabilités avec une période de 3.
+    La "moyenne" observée avec une distribution uniforme correspond à une répartition équitable de la présence sur les 3 états du cycle.
+
+    \item[- Question 7 : La classe transitoire C4] \hfill \\
+    Les états $\{3, 7, 23\}$ forment la classe \textbf{C4}.
+    Le graphe montre que cette classe est \textbf{transitoire} et que toutes les issues mènent vers la classe \textbf{C3}.
+    Le système est donc obligé de quitter C4 pour aller tourner dans le cycle C3.
+    C'est exactement ce que montrent les résultats numériques : la probabilité d'être en 3, 7 ou 23 diminue jusqu'à 0, car toute la "matière" est transférée vers la classe C3.
+\end{description}
 
 \subsection*{Question 10 — distributions stationnaires de la classe finale non explorée}
 \phantomsection
