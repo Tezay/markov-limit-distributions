@@ -652,16 +652,16 @@ Nous avons exécuté les commandes suivantes :
 \end{verbatim}
 
 \paragraph{Analyse des résultats numériques pour l'état 3}
-Contrairement aux comportements de **stabilité** (Q1-Q4) et d'**oscillation** (Q6), nous observons pour l'état 3 que la probabilité d'y être est extrêmement faible et tend vers zéro pour les grandes valeurs de $n$.
+Contrairement aux comportements de stabilité (Q1-Q4) et d'oscillation (Q6), nous observons pour l'état 3 que la probabilité d'y être est extrêmement faible et tend vers zéro pour les grandes valeurs de $n$.
 
 \begin{itemize}[label=$\diamond$]
     \item Pour $n=50$ : $\Pi^{(50)}(3)$ est très proche de zéro.
     \item Pour $n=100$ : $\Pi^{(100)}(3)$ est encore plus proche de zéro.
-    \item Pour $n=200$ : $\Pi^{(200)}(3)$ confirme la **tendance à l'annulation**.
+    \item Pour $n=200$ : $\Pi^{(200)}(3)$ confirme la tendance à l'annulation.
 \end{itemize}
 
 \paragraph{Conclusion pour l'état 3}
-L'état 3 est un état de **passage** (ou d'extinction). La probabilité d'y être **s'annule à long terme** ($\lim_{n \to \infty} \Pi^{(n)}(3) = 0$). Le système quitte cet état pour se diriger vers les ensembles d'états permanents.
+L'état 3 est un état de passage. La probabilité d'y être s'annule à long terme ($\lim_{n \to \infty} \Pi^{(n)}(3) = 0$). Le système quitte cet état pour se diriger vers d'autres états.
 
 \hrule
 
@@ -676,13 +676,16 @@ Nous avons exécuté les commandes suivantes :
 \end{verbatim}
 
 \paragraph{Analyse des résultats numériques pour l'état 7}
+Comme pour l'état 3, les résultats (\texttt{data/q7/q7\_step*.txt}) montrent que la probabilité ($\lim_(n \to \infty) \Pi^{(n)}(7) $) diminue significativement avec l'augmentation de $n$. Le système semble quitter l'état 7 pour se diriger vers d'autres états.
 \textbf{Observations:}
 \begin{itemize}[label=$\diamond$]
-    \item La probabilité $\Pi^{(n)}(7)$ présente une **décroissance rapide vers $0$**, confirmant le même comportement que l'état 3.
-    \item L'ensemble de la masse de probabilité est transféré aux états permanents (stables et cycliques).
+    \item Pour $n=50$ : $\Pi^{(50)}(7)$ est très proche de zéro.
+    \item Pour $n=100$ : $\Pi^{(100)}(7)$ est encore plus proche de zéro.
+    \item Pour $n=200$ : $\Pi^{(200)}(7)$ confirme la tendance à l'annulation.
 \end{itemize}
+
 \textbf{Conclusion:}
-L'état 7 est un état de **passage**.
+Comme pour l'état 3, l'état 7 est un état de passage.
 
 \hrule
 
@@ -697,13 +700,10 @@ Nous avons exécuté les commandes suivantes :
 \end{verbatim}
 
 \paragraph{Analyse des résultats numériques pour l'état 23}
-\textbf{Observations:}
-\begin{itemize}[label=$\diamond$]
-    \item La probabilité $\Pi^{(n)}(23)$ **s'approche également de $0$** pour les grandes valeurs de $n$.
-    \item La masse de probabilité rejoint les ensembles d'états dont la probabilité est non nulle à long terme.
-\end{itemize}
+Comme pour les autres états, les résultats (\texttt{data/q7/q7\_step*.txt}) montrent que la probabilité ($\lim_(n \to \infty) \Pi^{(n)}(23) $) diminue significativement avec l'augmentation de $n$. Le système semble quitter l'état 23 pour se diriger vers d'autres états.
+\newline
 \textbf{Conclusion:}
-L'état 23 est un état de **passage**.
+L'état 23 est un état de passage.
 
 \hrule
 \vspace{1\baselineskip}
@@ -751,7 +751,7 @@ L'état 23 est un état de **passage**.
 
     \end{tikzpicture}
 
-    \caption{Évolution des probabilités $\Pi^{(n)}(i)$ pour les états de passage $\{3, 7, 23\}$ sur une échelle logarithmique (base 10). La décroissance linéaire sur cette échelle confirme la **tendance exponentielle vers zéro** de la probabilité d'être dans ces états.}
+    \caption{Évolution des probabilités $\Pi^{(n)}(i)$ pour les états de passage $\{3, 7, 23\}$ sur une échelle logarithmique (base 10). La décroissance linéaire sur cette échelle confirme la tendance exponentielle vers zéro de la probabilité d'être dans ces états.}
     \label{fig:q7_extinction_log}
 \end{figure}
 
@@ -762,21 +762,17 @@ L'état 23 est un état de **passage**.
 Nous testons si une distribution initiale uniforme sur cet ensemble d'états de passage permettrait de stabiliser le système. Soit :
 $$ \Pi^{(0)} = \frac{1}{3}e_{3} + \frac{1}{3}e_{7} + \frac{1}{3}e_{23} $$
 Nous exécutons l'analyse pour de grandes valeurs de $n$ :
-\begin{verbatim}
-./markov_analyzer --in data/moodle/matrix.txt --dist-uniform 3 7 23 --dist-steps 50
-./markov_analyzer --in data/moodle/matrix.txt --dist-uniform 3 7 23 --dist-steps 100
-\end{verbatim}
 
 \paragraph{Analyse de la distribution uniforme $\Pi^{(0)}$}
-**Observations :**
+Observations :
 \begin{itemize}[label=$\diamond$]
-    \item Pour $n=50$ et $n=100$, la somme des probabilités $\Pi^{(n)}(3) + \Pi^{(n)}(7) + \Pi^{(n)}(23)$ est **très proche de zéro**.
-    \item La masse initiale de $1$ se retrouve entièrement distribuée sur les états des ensembles permanents (stables et cycliques).
-    \item La distribution $\Pi^{(n)}$ ne reste **pas invariante** : elle se déplace hors de l'ensemble initial.
+    \item Pour $n=50$ et $n=100$, la somme des probabilités $\Pi^{(n)}(3) + \Pi^{(n)}(7) + \Pi^{(n)}(23)$ est très proche de zéro.
+    \item La masse initiale de $1$ se retrouve entièrement distribuée sur les états des ensembles permanents.
+    \item La distribution $\Pi^{(n)}$ ne reste pas invariante : elle se déplace hors de l'ensemble initial.
 \end{itemize}
 
-**Conclusion :**
-L'ensemble $\{3, 7, 23\}$ ne peut pas former un comportement permanent (stable ou cyclique). Même en partant d'une distribution uniforme, le système est contraint de les quitter. La probabilité d'être dans cet ensemble **s'annule à long terme** :
+\paragraph{Conclusion}
+L'ensemble $\{3, 7, 23\}$ ne peut pas former un comportement permanent. Même en partant d'une distribution uniforme, le système est contraint de le quitter. La probabilité d'être dans cet ensemble s'annule à long terme :
 $$ \lim_{n \to \infty} \left( \Pi^{(n)}(3) + \Pi^{(n)}(7) + \Pi^{(n)}(23) \right) = 0 $$
 
 \begin{figure}[H]
@@ -810,17 +806,9 @@ $$ \lim_{n \to \infty} \left( \Pi^{(n)}(3) + \Pi^{(n)}(7) + \Pi^{(n)}(23) \right
         };
         \node[red, right] at (200,0.1) {\small Masse sur $\{3, 7, 23\}$};
 
-        % ---- Courbe des ensembles permanents (Masse totale qui s'accumule) ----
-        % La masse arrive de 0 et croit vers 1
-        \draw[blue, thick] plot [smooth] coordinates {
-            (0,0.0) (50,0.85) (100,0.95) (200,0.995)
-        };
-        \node[blue, right] at (200,0.95) {\small Masse sur ensembles permanents};
-
     \end{tikzpicture}
 
-    \caption{Évolution de la masse de probabilité totale pour la distribution uniforme initiale sur $\{3, 7, 23\}$. Le graphique montre que la masse quitte l'ensemble initial pour s'accumuler dans les ensembles permanents (états stables et cycliques).}
+    \caption{Évolution de la masse de probabilité totale pour la distribution uniforme initiale sur $\{3, 7, 23\}$. Le graphique montre que la masse quitte l'ensemble initial pour s'accumuler dans les ensembles permanents.}
     \label{fig:q7_accumulation_permanents}
 \end{figure}
-
 
