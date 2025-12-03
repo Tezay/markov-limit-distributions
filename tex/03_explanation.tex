@@ -327,7 +327,110 @@ L'analyse du graphe et des classes permet d'expliquer intuitivement les comporte
     C'est exactement ce que montrent les résultats numériques : la probabilité d'être en 3, 7 ou 23 diminue jusqu'à 0, car toute la "matière" est transférée vers la classe C3.
 \end{description}
 
-\subsection*{Question 10 — distributions stationnaires de la classe finale non explorée}
-\phantomsection
-\addcontentsline{toc}{subsection}{Question 10 — distributions stationnaires de la classe finale non explorée}
-\placeholder{Lister et paramétrer toutes les distributions stationnaires de la classe finale restante (méthode linéaire ou calcul symbolique).}
+\subsection*{Question 10 : distributions stationnaires de la classe finale non explorée}
+
+\paragraph{Identification de la classe}
+D'après l'analyse de la structure de la chaîne (Question 8), les classes finales (persistantes) sont $C1, C2, C3$ et $C5$. Les classes $C2$ (Q1-Q3), $C5$ (Q4) et $C3$ (Q6) ayant déjà été étudiées, la classe finale non explorée est la classe $C1$:
+$$ C1 = \{1, 4, 11, 18, 26, 27\} $$
+Cette classe est \textbf{irréductible} et \textbf{2-périodique} ($d=2$).
+
+Puisque $C1$ est une unique classe irréductible, elle admet une unique distribution stationnaire, notée $\Pi_{C1}$.
+
+\paragraph{Système d'équations linéaires}
+Nous déterminons la distribution stationnaire par $\Pi_{C1} = (\pi_1, \pi_4, \pi_{11}, \pi_{18}, \pi_{26}, \pi_{27})$ en résolvant le système $\Pi_{C1} M_{C1} = \Pi_{C1}$ et la condition de normalisation $\sum_{i \in C1} \pi_i = 1$.
+
+En extrayant les transitions de la classe $C1$, la sous-matrice de transition $M_{C1}$ est :
+$$ M_{C1} = 
+\begin{pmatrix}
+ & 1 & 4 & 11 & 18 & 26 & 27 \\
+1 & 0 & 0 & 0 & 0.20 & 0.20 & 0.60 \\
+4 & 0 & 0 & 0.50 & 0 & 0 & 0.50 \\
+11 & 0 & 0.50 & 0 & 0.50 & 0 & 0 \\
+18 & 0 & 0 & 0.50 & 0 & 0 & 0.50 \\
+26 & 0.50 & 0.50 & 0 & 0 & 0 & 0 \\
+27 & 0.50 & 0 & 0 & 0 & 0.50 & 0 \\
+\end{pmatrix}
+$$
+
+En utilisant les probabilités de transition de la matrice, le système est :
+\begin{align*}
+\pi_1 &= 0.50 \pi_{26} + 0.50 \pi_{27} & (1) \\
+\pi_4 &= 0.50 \pi_{11} + 0.50 \pi_{26} & (2) \\
+\pi_{11} &= 0.50 \pi_4 + 0.50 \pi_{18} & (3) \\
+\pi_{18} &= 0.20 \pi_1 + 0.50 \pi_{11} & (4) \\
+\pi_{26} &= 0.20 \pi_1 + 0.50 \pi_{27} & (5) \\
+\pi_{27} &= 0.60 \pi_1 + 0.50 \pi_4 + 0.50 \pi_{18} & (6) \\
+\pi_1 + \pi_4 + \pi_{11} + \pi_{18} + \pi_{26} + \pi_{27} &= 1 & (7)
+\end{align*}
+
+\paragraph{Calcul et simplification}
+
+Nous exprimons toutes les probabilités en fonction de $\pi_1$.
+
+\begin{enumerate}[label=\textbf{Étape \arabic*}]
+    \item \textbf{Détermination de $\pi_{26}$ et $\pi_{27}$ en fonction de $\pi_1$}
+
+    \textbullet\ On réécris (1) et (5) :
+    $$ (1) \implies \pi_{27} = 2 \pi_1 - \pi_{26} $$
+    $$ (5) \implies \pi_{26} = 0.2 \pi_1 + 0.5 \pi_{27} $$
+    \textbullet\ Substituons $\pi_{27}$ dans (5) :
+    \begin{align*}
+    \pi_{26} &= 0.2 \pi_1 + 0.5 (2 \pi_1 - \pi_{26}) \\
+    \pi_{26} &= 0.2 \pi_1 + 1.0 \pi_1 - 0.5 \pi_{26} \\
+    1.5 \pi_{26} &= 1.2 \pi_1 \\
+    \pi_{26} &= \frac{1.2}{1.5} \pi_1 = 0.8 \pi_1 \quad \left( \text{soit } \frac{4}{5}\pi_1 \right)
+    \end{align*}
+    \textbullet\ Retrouvons $\pi_{27}$ avec (1) :
+    $$ \pi_{27} = 2 \pi_1 - 0.8 \pi_1 = 1.2 \pi_1 \quad \left( \text{soit } \frac{6}{5}\pi_1 \right) $$
+
+    \item \textbf{Détermination de $\pi_{11}$ et $\pi_{18}$ en fonction de $\pi_1$}
+
+    \textbullet\ On réécris (6) en utilisant $\pi_{27} = 1.2 \pi_1$ :
+    \begin{align*}
+    1.2 \pi_1 &= 0.6 \pi_1 + 0.5 (\pi_4 + \pi_{18}) \\
+    0.6 \pi_1 &= 0.5 (\pi_4 + \pi_{18}) \\
+    \pi_4 + \pi_{18} &= 1.2 \pi_1 \quad (A)
+    \end{align*}
+    \textbullet\ Utilisons (3) et l'équation (A) :
+    $$ \pi_{11} = 0.5 (\pi_4 + \pi_{18}) = 0.5 (1.2 \pi_1) = 0.6 \pi_1 \quad \left( \text{soit } \frac{3}{5}\pi_1 \right) $$
+    \textbullet\ Utilisons (4) avec $\pi_{11} = 0.6 \pi_1$ :
+    $$ \pi_{18} = 0.2 \pi_1 + 0.5 (0.6 \pi_1) = 0.2 \pi_1 + 0.3 \pi_1 = 0.5 \pi_1 \quad \left( \text{soit } \frac{1}{2}\pi_1 \right) $$
+
+    \item \textbf{Détermination de $\pi_4$ en fonction de $\pi_1$}
+
+    \textbullet\ Utilisons l'équation (A) :
+    $$ \pi_4 + 0.5 \pi_1 = 1.2 \pi_1 $$
+    $$ \pi_4 = 1.2 \pi_1 - 0.5 \pi_1 = 0.7 \pi_1 \quad \left( \text{soit } \frac{7}{10}\pi_1 \right) $$
+
+    \item \textbf{Normalisation}
+
+    \textbullet\ Substituons toutes les valeurs dans l'équation de normalisation (7) :
+    $$ \pi_1 + 0.7 \pi_1 + 0.6 \pi_1 + 0.5 \pi_1 + 0.8 \pi_1 + 1.2 \pi_1 = 1 $$
+    $$ (1 + 0.7 + 0.6 + 0.5 + 0.8 + 1.2) \pi_1 = 1 $$
+    $$ 4.8 \pi_1 = 1 $$
+    $$ \pi_1 = \frac{1}{4.8} = \frac{10}{48} = \frac{5}{24} $$
+\end{enumerate}
+
+\paragraph{Résultat de la distribution stationnaire $\Pi_{C1}$}
+
+En substituant $\pi_1 = \frac{5}{24}$ dans les expressions trouvées :
+\begin{align*}
+\pi_1 &= \frac{5}{24} \\
+\pi_4 &= 0.7 \cdot \frac{5}{24} = \frac{7}{10} \cdot \frac{5}{24} = \frac{7}{48} \\
+\pi_{11} &= 0.6 \cdot \frac{5}{24} = \frac{3}{5} \cdot \frac{5}{24} = \frac{3}{24} = \frac{1}{8} \\
+\pi_{18} &= 0.5 \cdot \frac{5}{24} = \frac{1}{2} \cdot \frac{5}{24} = \frac{5}{48} \\
+\pi_{26} &= 0.8 \cdot \frac{5}{24} = \frac{4}{5} \cdot \frac{5}{24} = \frac{4}{24} = \frac{1}{6} \\
+\pi_{27} &= 1.2 \cdot \frac{5}{24} = \frac{6}{5} \cdot \frac{5}{24} = \frac{6}{24} = \frac{1}{4}
+\end{align*}
+
+La distribution stationnaire unique est :
+$$
+\Pi_{C1} = \left( \frac{5}{24}, \frac{7}{48}, \frac{1}{8}, \frac{5}{48}, \frac{1}{6}, \frac{1}{4} \right)
+$$
+
+
+\begin{remark}
+    La distribution stationnaire $\Pi_{C1}$ indique la répartition à long terme des probabilités entre les états de la classe finale $C1$.
+    Étant donné que cette classe est 2-périodique, le système oscillera entre deux sous-ensembles d'états à chaque pas de temps.
+    Cependant, la distribution stationnaire reste valide pour décrire la proportion de temps passé dans chaque état sur une longue période.
+\end{remark}
