@@ -505,6 +505,9 @@ Nous avons exécuté les commandes suivantes :
 ./markov_analyzer --in data/moodle/matrix.txt --dist-start 6 --dist-steps 50
 ./markov_analyzer --in data/moodle/matrix.txt --dist-start 6 --dist-steps 51
 ./markov_analyzer --in data/moodle/matrix.txt --dist-start 6 --dist-steps 52
+./markov_analyzer --in data/moodle/matrix.txt --dist-start 6 --dist-steps 53
+./markov_analyzer --in data/moodle/matrix.txt --dist-start 6 --dist-steps 54
+./markov_analyzer --in data/moodle/matrix.txt --dist-start 6 --dist-steps 55
 \end{verbatim}
 
 
@@ -516,71 +519,96 @@ Contrairement aux questions précédentes, les fichiers de sortie (\texttt{data/
     \item Pour $n=50$ : La probabilité est concentrée à $100\%$ sur l'état \textbf{20}.
     \item Pour $n=51$ : La probabilité est concentrée à $100\%$ sur l'état \textbf{6}.
     \item Pour $n=52$ : La probabilité est concentrée à $100\%$ sur l'état \textbf{17}.
+    \item Pour $n=53$ : La probabilité est concentrée à $100\%$ sur l'état \textbf{20}.
+    \item Pour $n=54$ : La probabilité est concentrée à $100\%$ sur l'état \textbf{6}.
+    \item Pour $n=55$ : La probabilité est concentrée à $100\%$ sur l'état \textbf{17}.
 \end{itemize}
 
 \begin{figure}[H]
   \centering
   % Utilisation d'une échelle linéaire (xscale) pour maximiser la visibilité
-  \begin{tikzpicture}[xscale=5,yscale=5] 
+  % xscale ajusté pour 6 étapes (50 à 55)
+  \begin{tikzpicture}[xscale=3,yscale=5] 
 
     % Constantes de temps (n)
     \pgfmathsetmacro{\nfifty}{50}
     \pgfmathsetmacro{\nfiftyone}{51}
     \pgfmathsetmacro{\nfiftytwo}{52}
+    \pgfmathsetmacro{\nfiftythree}{53}
+    \pgfmathsetmacro{\nfiftyfour}{54}
+    \pgfmathsetmacro{\nfiftyfive}{55}
 
     % Décalage pour commencer à n=50
     % On décale toutes les coordonnées x pour que n=50 soit à la position 0.1 de l'axe réel.
     \pgfmathsetmacro{\startpos}{0.1}
     \pgfmathsetmacro{\xshift}{\startpos - \nfifty} 
-    
+    \pgfmathsetmacro{\endpos}{\nfiftyfive + \xshift + 0.15} % Pour le bout de l'axe
+
     % Axes
-    % L'axe des X s'étend légèrement au-delà de n=52
-    \draw[->] (\startpos - 0.05,0) -- (\nfiftytwo + \xshift + 0.1,0) node[below] {$n$}; 
+    % L'axe des X s'étend légèrement au-delà de n=55
+    \draw[->] (\startpos - 0.05,0) -- (\endpos,0) node[below] {$n$}; 
     % L'axe des Y est tracé à la position de n=50
     \draw[->] (\startpos,-0.005) -- (\startpos,1.1) node[left] {$\Pi^{(n)}(i)$}; 
 
-    % Grille / repères en x (Commence à n=50)
-    % On utilise \x + \xshift pour repositionner les labels
+    % Grille / repères en x
     \foreach \x/\lbl in {
         \nfifty/{\small 50},
         \nfiftyone/{\small 51}, 
-        \nfiftytwo/{\small 52}
+        \nfiftytwo/{\small 52}, 
+        \nfiftythree/{\small 53}, 
+        \nfiftyfour/{\small 54},
+        \nfiftyfive/{\small 55}
     }{
-      \draw[gray!30] (\x + \xshift,0) -- (\x + \xshift,1.0);
+      \draw[gray!30, dashed] (\x + \xshift,0) -- (\x + \xshift,1.0);
       \node[below,yshift=-2pt] at (\x + \xshift,0) {\lbl};
     }
     
     % Grille / repères en y (0 à 1.0)
     \foreach \y in {0.2,0.4,0.6,0.8,1.0}{
-        \draw[gray!30] (\startpos,\y) -- (\nfiftytwo + \xshift + 0.05,\y);
+        \draw[gray!30] (\startpos,\y) -- (\endpos - 0.05,\y);
         \node[left] at (\startpos,\y) {\small \y};
     }
 
     % ---- Courbes ----
     % Les coordonnées sont calculées avec l'ajustement \x + \xshift
     
-    % Etat 6 (Bleu) - Pic à n=51
-    \draw[blue,thick] plot coordinates {
-      (\nfifty + \xshift,0.00) (\nfiftyone + \xshift,1.00) (\nfiftytwo + \xshift,0.00)
+    % Etat 6 (Bleu) - Pic à n=51, n=54
+    \draw[blue,thick,->] plot coordinates {
+      (\nfifty + \xshift,0.00) 
+      (\nfiftyone + \xshift,1.00) 
+      (\nfiftytwo + \xshift,0.00)
+      (\nfiftythree + \xshift,0.00)
+      (\nfiftyfour + \xshift,1.00)
+      (\nfiftyfive + \xshift,0.00)
     };
-    \node[blue, right] at (\nfiftytwo + \xshift + 0.05,0.05) {\small état 6};
+    \node[blue, right] at (\endpos - 0.05,0.05) {\small état 6};
 
-    % Etat 17 (Rouge) - Pic à n=52
-    \draw[red,thick] plot coordinates {
-      (\nfifty + \xshift,0.00) (\nfiftyone + \xshift,0.00) (\nfiftytwo + \xshift,1.00)
+    % Etat 17 (Rouge) - Pic à n=52, n=55
+    \draw[red,thick,->] plot coordinates {
+      (\nfifty + \xshift,0.00) 
+      (\nfiftyone + \xshift,0.00) 
+      (\nfiftytwo + \xshift,1.00)
+      (\nfiftythree + \xshift,0.00)
+      (\nfiftyfour + \xshift,0.00)
+      (\nfiftyfive + \xshift,1.00)
     };
-    \node[red, right] at (\nfiftytwo + \xshift + 0.05,1.00) {\small état 17};
+    \node[red, right] at (\endpos - 0.05,1.00) {\small état 17};
 
-    % Etat 20 (Vert/Teal) - Pic à n=50
-    \draw[teal!70!black,thick] plot coordinates {
-      (\nfifty + \xshift,1.00) (\nfiftyone + \xshift,0.00) (\nfiftytwo + \xshift,0.00)
+    % Etat 20 (Vert/Teal) - Pic à n=50, n=53
+    \draw[teal!70!black,thick,->] plot coordinates {
+      (\nfifty + \xshift,1.00) 
+      (\nfiftyone + \xshift,0.00) 
+      (\nfiftytwo + \xshift,0.00)
+      (\nfiftythree + \xshift,1.00)
+      (\nfiftyfour + \xshift,0.00)
+      (\nfiftyfive + \xshift,0.00)
     };
-    \node[teal!70!black, right] at (\nfiftytwo + \xshift + 0.05,0.15) {\small état 20};
+    \node[teal!70!black, right] at (\endpos - 0.05,0.15) {\small état 20};
 
   \end{tikzpicture}
 
-  \caption{Évolution détaillée des probabilités pour la classe $\{6, 17, 20\}$ entre $n=50$ et $n=52$ sur une échelle linéaire. Le graphique montre le cycle déterministe $\mathbf{20 \to 6 \to 17}$ qui confirme la périodicité $d=3$.}
-  \label{fig:q6_cycle_lineaire}
+  \caption{Évolution des probabilités pour la classe $\{6, 17, 20\}$ entre $n=50$ et $n=55$ sur une échelle linéaire. Le graphique illustre le cycle déterministe $\mathbf{20 \to 6 \to 17}$ qui se répète fidèlement, confirmant la période $d=3$.}
+  \label{fig:q6_cycle_detaille_lineaire}
 \end{figure}
 
 Ce comportement s'explique par la structure du graphe : ces trois états forment un cycle déterministe $6 \to 17 \to 20 \to 6 \dots$ avec des probabilités de transition de $1$.
@@ -604,7 +632,7 @@ De la même manière, pour toute combinaison linéaire initiale de la forme :
 $$ \Pi^{(0)} = a \cdot e_{6} + b \cdot e_{17} + c \cdot e_{20} $$
 
 \paragraph{Conclusion}
-Contrairement aux classes étudiées dans les questions 1 à 5, la classe $\{6, 17, 20\}$ \textbf{n'admet pas de distribution limite} au sens strict (pas de convergence $\lim_{n \to \infty} \Pi^{(n)}$) pour un état de départ arbitraire, en raison de sa périodicité (période $d=3$).
+Contrairement aux autres cas étudiées dans les questions 1 à 5, le cas $\{6, 17, 20\}$ \textbf{n'admet pas de distribution limite} au sens strict (pas de convergence $\lim_{n \to \infty} \Pi^{(n)}$) pour un état de départ arbitraire, en raison de sa périodicité (période $d=3$).
 
 Cependant, elle admet une \textbf{distribution stationnaire} unique $\Pi_{stat} = (\frac{1}{3}, \frac{1}{3}, \frac{1}{3})$ sur ces états. Le système ne converge vers cette distribution que si l'on part d'une configuration initiale spécifique (combinaison linéaire précise), mais oscille indéfiniment sinon.
 % ---------------------------------------------------------

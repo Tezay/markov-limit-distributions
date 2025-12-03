@@ -277,9 +277,160 @@ Le graphe réduit montre les relations d'accessibilité entre les classes. Les c
 \subsection*{Question 9 — interprétation des questions 1 à 7}
 \phantomsection
 \addcontentsline{toc}{subsection}{Question 9 — interprétation des questions 1 à 7}
-\placeholder{Mettre en regard les trajectoires de \(\Pi^{(n)}\) avec la structure du graphe réduit : quelles classes sont atteintes, quelles périodes expliquent les oscillations, comment les distributions limites se composent.}
+Nous pouvons maintenant réinterpréter l'ensemble des résultats numériques des questions 1 à 7 grâce aux classes communicantes établies à la question 8 (Figure~\ref{fig:hasse}).
+L'analyse du graphe et des classes permet d'expliquer intuitivement les comportements observés (stabilisation, oscillation ou disparition).
 
-\subsection*{Question 10 — distributions stationnaires de la classe finale non explorée}
-\phantomsection
-\addcontentsline{toc}{subsection}{Question 10 — distributions stationnaires de la classe finale non explorée}
-\placeholder{Lister et paramétrer toutes les distributions stationnaires de la classe finale restante (méthode linéaire ou calcul symbolique).}
+\begin{description}
+    \item[- Questions 1, 2 et 3 : La classe finale C2] \hfill \\
+    Les états $\{2, 5, 12, 21, 25\}$ forment la classe \textbf{C2}.
+    D'après l'analyse de la question 8, cette classe est \textbf{finale} : une fois que le système entre dans cet ensemble d'états, il ne peut plus en sortir (aucune flèche ne quitte C2).
+    De plus, elle est \textbf{apériodique} (période $d=1$), ce qui signifie qu'il n'y a pas de cycle forcé qui empêcherait la stabilisation.
+    Le système finit donc par se "mélanger" complètement à l'intérieur de cette classe, ce qui conduit à une distribution d'équilibre unique.
+    Cela explique pourquoi :
+    \begin{itemize}
+        \item À la question 1, (départ en 2) les probabilités se stabilisent vers des valeurs fixes.
+        \item À la question 2, peu importe l'état de départ dans la classe, le mélange conduit au même équilibre final.
+        \item À la question 3, toute répartition initiale sur ces états converge vers cette même limite.
+    \end{itemize}
+
+    \item[- Question 4 : La classe finale C5] \hfill \\
+    Les états $\{8, 9, 16\}$ constituent la classe \textbf{C5}.
+    Comme pour C2, cette classe est \textbf{finale} (on ne peut pas en sortir) et \textbf{apériodique}.
+    Elle se comporte comme un système isolé qui possède son propre équilibre interne.
+    C'est ce que nous avons observé : en partant de n'importe quel état de ce groupe, le système se stabilise vers une distribution limite propre à C5, indépendante de ce qui se passe ailleurs dans le graphe.
+
+    \item[- Question 5 : Les classes transitoires C6 et C7] \hfill \\
+    Les états $\{10, 14, 19, 22, 24\}$ appartiennent aux classes \textbf{C6} ($\{14\}$) et \textbf{C7} ($\{10, 19, 22, 24\}$).
+    Ces classes sont \textbf{transitoires} : le diagramme de Hasse montre que des flèches permettent de quitter définitivement ces ensembles.
+    \begin{itemize}
+        \item De \textbf{C7}, on descend vers \textbf{C6}.
+        \item De \textbf{C6} (état 14), le système peut "tomber" soit dans la classe finale \textbf{C2}, soit dans la classe finale \textbf{C5}.
+    \end{itemize}
+    Une fois parti vers C2 ou C5, le système ne revient jamais.
+    Cela explique deux choses :
+    \begin{enumerate}
+        \item La probabilité d'être dans les états de C6 et C7 tend vers 0 (le système se vide de ces états).
+        \item L'état final dépend du "chemin" pris : selon l'état de départ, on a plus ou moins de chances de finir piégé dans C2 ou dans C5. C'est pourquoi la distribution limite observée est un mélange des limites de C2 et C5, pondéré par les chances d'atterrir dans l'une ou l'autre.
+    \end{enumerate}
+
+    \item[- Question 6 : La classe finale périodique C3] \hfill \\
+    Les états $\{6, 17, 20\}$ forment la classe \textbf{C3}.
+    Cette classe est \textbf{finale} (on ne peut pas en sortir) mais elle possède une structure particulière : c'est un cycle pur de longueur 3 ($20 \to 6 \to 17 \to 20 \dots$).
+    Le système est contraint de tourner en rond indéfiniment.
+    Cela explique pourquoi nous n'avons pas observé de stabilisation vers une valeur fixe (convergence), mais une oscillation perpétuelle des probabilités avec une période de 3.
+    La "moyenne" observée avec une distribution uniforme correspond à une répartition équitable de la présence sur les 3 états du cycle.
+
+    \item[- Question 7 : La classe transitoire C4] \hfill \\
+    Les états $\{3, 7, 23\}$ forment la classe \textbf{C4}.
+    Le graphe montre que cette classe est \textbf{transitoire} et que toutes les issues mènent vers la classe \textbf{C3}.
+    Le système est donc obligé de quitter C4 pour aller tourner dans le cycle C3.
+    C'est exactement ce que montrent les résultats numériques : la probabilité d'être en 3, 7 ou 23 diminue jusqu'à 0, car toute la "matière" est transférée vers la classe C3.
+\end{description}
+
+\subsection*{Question 10 : distributions stationnaires de la classe finale non explorée}
+
+\paragraph{Identification de la classe}
+D'après l'analyse de la structure de la chaîne (Question 8), les classes finales (persistantes) sont $C1, C2, C3$ et $C5$. Les classes $C2$ (Q1-Q3), $C5$ (Q4) et $C3$ (Q6) ayant déjà été étudiées, la classe finale non explorée est la classe $C1$:
+$$ C1 = \{1, 4, 11, 18, 26, 27\} $$
+Cette classe est \textbf{irréductible} et \textbf{2-périodique} ($d=2$).
+
+Puisque $C1$ est une unique classe irréductible, elle admet une unique distribution stationnaire, notée $\Pi_{C1}$.
+
+\paragraph{Système d'équations linéaires}
+Nous déterminons la distribution stationnaire par $\Pi_{C1} = (\pi_1, \pi_4, \pi_{11}, \pi_{18}, \pi_{26}, \pi_{27})$ en résolvant le système $\Pi_{C1} M_{C1} = \Pi_{C1}$ et la condition de normalisation $\sum_{i \in C1} \pi_i = 1$.
+
+En extrayant les transitions de la classe $C1$, la sous-matrice de transition $M_{C1}$ est :
+$$ M_{C1} = 
+\begin{pmatrix}
+ & 1 & 4 & 11 & 18 & 26 & 27 \\
+1 & 0 & 0 & 0 & 0.20 & 0.20 & 0.60 \\
+4 & 0 & 0 & 0.50 & 0 & 0 & 0.50 \\
+11 & 0 & 0.50 & 0 & 0.50 & 0 & 0 \\
+18 & 0 & 0 & 0.50 & 0 & 0 & 0.50 \\
+26 & 0.50 & 0.50 & 0 & 0 & 0 & 0 \\
+27 & 0.50 & 0 & 0 & 0 & 0.50 & 0 \\
+\end{pmatrix}
+$$
+
+En utilisant les probabilités de transition de la matrice, le système est :
+\begin{align*}
+\pi_1 &= 0.50 \pi_{26} + 0.50 \pi_{27} & (1) \\
+\pi_4 &= 0.50 \pi_{11} + 0.50 \pi_{26} & (2) \\
+\pi_{11} &= 0.50 \pi_4 + 0.50 \pi_{18} & (3) \\
+\pi_{18} &= 0.20 \pi_1 + 0.50 \pi_{11} & (4) \\
+\pi_{26} &= 0.20 \pi_1 + 0.50 \pi_{27} & (5) \\
+\pi_{27} &= 0.60 \pi_1 + 0.50 \pi_4 + 0.50 \pi_{18} & (6) \\
+\pi_1 + \pi_4 + \pi_{11} + \pi_{18} + \pi_{26} + \pi_{27} &= 1 & (7)
+\end{align*}
+
+\paragraph{Calcul et simplification}
+
+Nous exprimons toutes les probabilités en fonction de $\pi_1$.
+
+\begin{enumerate}[label=\textbf{Étape \arabic*}]
+    \item \textbf{Détermination de $\pi_{26}$ et $\pi_{27}$ en fonction de $\pi_1$}
+
+    \textbullet\ On réécris (1) et (5) :
+    $$ (1) \implies \pi_{27} = 2 \pi_1 - \pi_{26} $$
+    $$ (5) \implies \pi_{26} = 0.2 \pi_1 + 0.5 \pi_{27} $$
+    \textbullet\ Substituons $\pi_{27}$ dans (5) :
+    \begin{align*}
+    \pi_{26} &= 0.2 \pi_1 + 0.5 (2 \pi_1 - \pi_{26}) \\
+    \pi_{26} &= 0.2 \pi_1 + 1.0 \pi_1 - 0.5 \pi_{26} \\
+    1.5 \pi_{26} &= 1.2 \pi_1 \\
+    \pi_{26} &= \frac{1.2}{1.5} \pi_1 = 0.8 \pi_1 \quad \left( \text{soit } \frac{4}{5}\pi_1 \right)
+    \end{align*}
+    \textbullet\ Retrouvons $\pi_{27}$ avec (1) :
+    $$ \pi_{27} = 2 \pi_1 - 0.8 \pi_1 = 1.2 \pi_1 \quad \left( \text{soit } \frac{6}{5}\pi_1 \right) $$
+
+    \item \textbf{Détermination de $\pi_{11}$ et $\pi_{18}$ en fonction de $\pi_1$}
+
+    \textbullet\ On réécris (6) en utilisant $\pi_{27} = 1.2 \pi_1$ :
+    \begin{align*}
+    1.2 \pi_1 &= 0.6 \pi_1 + 0.5 (\pi_4 + \pi_{18}) \\
+    0.6 \pi_1 &= 0.5 (\pi_4 + \pi_{18}) \\
+    \pi_4 + \pi_{18} &= 1.2 \pi_1 \quad (A)
+    \end{align*}
+    \textbullet\ Utilisons (3) et l'équation (A) :
+    $$ \pi_{11} = 0.5 (\pi_4 + \pi_{18}) = 0.5 (1.2 \pi_1) = 0.6 \pi_1 \quad \left( \text{soit } \frac{3}{5}\pi_1 \right) $$
+    \textbullet\ Utilisons (4) avec $\pi_{11} = 0.6 \pi_1$ :
+    $$ \pi_{18} = 0.2 \pi_1 + 0.5 (0.6 \pi_1) = 0.2 \pi_1 + 0.3 \pi_1 = 0.5 \pi_1 \quad \left( \text{soit } \frac{1}{2}\pi_1 \right) $$
+
+    \item \textbf{Détermination de $\pi_4$ en fonction de $\pi_1$}
+
+    \textbullet\ Utilisons l'équation (A) :
+    $$ \pi_4 + 0.5 \pi_1 = 1.2 \pi_1 $$
+    $$ \pi_4 = 1.2 \pi_1 - 0.5 \pi_1 = 0.7 \pi_1 \quad \left( \text{soit } \frac{7}{10}\pi_1 \right) $$
+
+    \item \textbf{Normalisation}
+
+    \textbullet\ Substituons toutes les valeurs dans l'équation de normalisation (7) :
+    $$ \pi_1 + 0.7 \pi_1 + 0.6 \pi_1 + 0.5 \pi_1 + 0.8 \pi_1 + 1.2 \pi_1 = 1 $$
+    $$ (1 + 0.7 + 0.6 + 0.5 + 0.8 + 1.2) \pi_1 = 1 $$
+    $$ 4.8 \pi_1 = 1 $$
+    $$ \pi_1 = \frac{1}{4.8} = \frac{10}{48} = \frac{5}{24} $$
+\end{enumerate}
+
+\paragraph{Résultat de la distribution stationnaire $\Pi_{C1}$}
+
+En substituant $\pi_1 = \frac{5}{24}$ dans les expressions trouvées :
+\begin{align*}
+\pi_1 &= \frac{5}{24} \\
+\pi_4 &= 0.7 \cdot \frac{5}{24} = \frac{7}{10} \cdot \frac{5}{24} = \frac{7}{48} \\
+\pi_{11} &= 0.6 \cdot \frac{5}{24} = \frac{3}{5} \cdot \frac{5}{24} = \frac{3}{24} = \frac{1}{8} \\
+\pi_{18} &= 0.5 \cdot \frac{5}{24} = \frac{1}{2} \cdot \frac{5}{24} = \frac{5}{48} \\
+\pi_{26} &= 0.8 \cdot \frac{5}{24} = \frac{4}{5} \cdot \frac{5}{24} = \frac{4}{24} = \frac{1}{6} \\
+\pi_{27} &= 1.2 \cdot \frac{5}{24} = \frac{6}{5} \cdot \frac{5}{24} = \frac{6}{24} = \frac{1}{4}
+\end{align*}
+
+La distribution stationnaire unique est :
+$$
+\Pi_{C1} = \left( \frac{5}{24}, \frac{7}{48}, \frac{1}{8}, \frac{5}{48}, \frac{1}{6}, \frac{1}{4} \right)
+$$
+
+
+\begin{remark}
+    La distribution stationnaire $\Pi_{C1}$ indique la répartition à long terme des probabilités entre les états de la classe finale $C1$.
+    Étant donné que cette classe est 2-périodique, le système oscillera entre deux sous-ensembles d'états à chaque pas de temps.
+    Cependant, la distribution stationnaire reste valide pour décrire la proportion de temps passé dans chaque état sur une longue période.
+\end{remark}
