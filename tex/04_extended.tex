@@ -12,10 +12,56 @@
 \addcontentsline{toc}{subsection}{Question 12 — probabilités d'atteindre les classes finales}
 \placeholder{Estimer puis calculer précisément \(P(s \to C_k)\) pour \(s \in \{10,19,22,24\}\) et chaque classe finale.}
 
-\subsection*{Question 13 — période d'une classe communicante}
+\subsection*{Question 13 : Preuve de l'Égalité des Périodes dans une Classe Communicante}
 \phantomsection
-\addcontentsline{toc}{subsection}{Question 13 — période d'une classe communicante}
-\placeholder{Proposer une preuve courte que deux états communicants ont la même période.}
+\addcontentsline{toc}{subsection}{Question 13 : Preuve de l'Égalité des Périodes dans une Classe Communicante}
+
+\paragraph{Définitions Préalables}
+
+\begin{itemize}[label=$\diamond$]
+    \item \textbf{Communication :} Deux états $i$ et $j$ communiquent ($i \longleftrightarrow j$) s'il existe $m \geq 1$ et $k \geq 1$ tels que la probabilité de transition $P_{ij}^{(m)} > 0$ et $P_{ji}^{(k)} > 0$.
+    \item \textbf{Période :} La période d'un état $i$, notée $d(i)$, est le plus grand commun diviseur (pgcd) des longueurs de tous les chemins partant de $i$ et y retournant :
+    $$d(i) = \text{pgcd} \{n \geq 1 \mid P_{ii}^{(n)} > 0 \}$$
+\end{itemize}
+
+\paragraph{Preuve}
+Soient $i$ et $j$ deux états de la même classe communicante.
+Il existe des chemins :
+\begin{itemize}
+    \item $i \to j$ de longueur $m$.
+    \item $j \to i$ de longueur $k$.
+\end{itemize}
+
+Soit $n$ une longueur quelconque d'un chemin de retour pour l'état $j$, i.e., $P_{jj}^{(n)} > 0$. Par définition, $d(j) \mid n$.
+
+Considérons le chemin composite de $i$ à $i$ passant par $j$ :
+$$i \xrightarrow{m} j \xrightarrow{n} j \xrightarrow{k} i$$
+La longueur totale est $\ell_1 = m + n + k$.
+Puisque $P_{ii}^{(m+n+k)} \geq P_{ij}^{(m)} P_{jj}^{(n)} P_{ji}^{(k)} > 0$, $\ell_1$ est une longueur de retour valide pour l'état $i$.
+
+Considérons également le chemin de retour simple :
+$$i \xrightarrow{m} j \xrightarrow{k} i$$
+La longueur totale est $\ell_2 = m + k$.
+Puisque $P_{ii}^{(m+k)} \geq P_{ij}^{(m)} P_{ji}^{(k)} > 0$, $\ell_2$ est une longueur de retour valide pour l'état $i$.
+
+Par définition de $d(i)$, celui-ci doit diviser toutes les longueurs de retour valides, y compris $\ell_1$ et $\ell_2$ :
+$$ d(i) \mid (m + n + k) \quad (E1)$$
+$$ d(i) \mid (m + k) \quad (E2)$$
+
+En soustrayant $(E1)$ de $(E2)$ (propriété de divisibilité), nous obtenons :
+$$d(i) \mid [(m + n + k) - (m + k)]$$
+$$d(i) \mid n$$
+Cette relation est vraie pour tout $n$ tel que $P_{jj}^{(n)} > 0$. Par conséquent, $d(i)$ divise tous les éléments de l'ensemble dont $d(j)$ est le PGCD. On en déduit :
+$$ d(i) \mid d(j) \quad (E3)$$
+
+On peut échanger $$d(j)$$ et $$d(i)$$ et ainsi, on obtient :
+$$ d(j) \mid d(i) \quad (E4)$$
+
+Puisque $d(i)$ et $d(j)$ sont des entiers positifs qui se divisent mutuellement, on conclut que :
+$$d(i) = d(j)$$
+Donc deux états appartenant à la même classe communicante ont nécessairement la même période.
+
+
 
 \subsection*{Question 14 — distributions limites et stationnaires}
 \phantomsection
