@@ -2,10 +2,120 @@
 \phantomsection
 \addcontentsline{toc}{section}{Pour aller plus loin}
 
-\subsection*{Question 11 — combinaisons de distributions limites}
+\subsection*{Question 11 — Combinaison linéaire des distributions limites depuis l’état 14}
 \phantomsection
-\addcontentsline{toc}{subsection}{Question 11 — combinaisons de distributions limites}
-\placeholder{Montrer que \(L_{\Pi_C} = \alpha L_{\Pi_A} + \beta L_{\Pi_B}\), interpréter \(\alpha,\beta\) en probabilités de passage et comparer calcul manuel vs. calcul numérique.}
+\addcontentsline{toc}{subsection}{Question 11 — Combinaison linéaire des distributions limites depuis l’état 14}
+
+Comme vu précédemment, l’état \(14\) appartient à la classe \(C_6\), qui est transitoire vers les classes \(C_5\) et \(C_2\).  
+Il a une connexion directe avec les états \(2\) et \(8\), donc \(14\) est un état transitoire vers \(C_5\) et \(C_2\).
+
+L’état \(2\) appartient à la classe \(C_2\) et l’état \(8\) appartient à la classe \(C_5\), qui sont toutes deux des classes finales.
+
+Nous cherchons à prouver que la distribution limite \(L\Pi_C\) partant de l’état \(14\) (trouvée précédemment) est une combinaison linéaire des distributions limites \(L\Pi_A\) et \(L\Pi_B\) partant respectivement des états \(2\) et \(8\).
+
+\[
+\exists (\alpha,\beta) \in \mathbb{R}^2,\quad L\Pi_C = \alpha\,L\Pi_A + \beta\,L\Pi_B.
+\]
+
+Nous pouvons donc interpréter les coefficients \(\alpha\) et \(\beta\) comme les probabilités d’atteindre les
+classes \(C_5\) et \(C_2\) en partant de l’état \(14\).  
+Sachant cela, \(14\) doit nécessairement atteindre la classe \(C_5\) ou \(C_2\), on peut donc en déduire
+que :
+\[
+\alpha + \beta = 1 \quad \text{(somme des probabilités).}
+\]
+
+En reprenant l’équation fondamentale qui décrit la dynamique d’une chaîne de Markov.  
+Nous définissons :
+\[
+x_i = P(\text{Atteindre } C_2 \mid X_0 = i),
+\qquad
+x_j = P(\text{Atteindre } C_2 \mid X_1 = j),
+\]
+qui découle de l'application de la Formule des Probabilités Totales sur le premier pas de transition.
+
+\bigskip
+
+\textbf{Rappel :} nous pouvons utiliser le premier pas pour par la suite exprimer les limites grâce à  
+Homogénéité temporelle : les probabilités de transition pour passer d’un état à un autre en un  
+pas sont indépendantes du temps (1.2 4) du sujet).
+
+Nous avons donc l’équation suivante :
+\[
+x_i = \sum_{j=1}^{27} P(X_1 = j \mid X_0 = i) * x_j
+\]
+
+On simplifie :
+\[
+x_i = \sum_{j=1}^{27} P_{ij} * x_j
+\]
+
+\bigskip
+
+En appliquant cela à \(i=14\), et comme \(\alpha = x_{14}\), on obtient :
+
+\[
+x_{14} = \alpha
+= P_{14,14} \cdot \alpha
++ \sum_{j \in C_2} P_{14,j} \cdot 1
++ \sum_{j \in C_5} P_{14,j} \cdot 0.
+\]
+
+C’est-à-dire :
+\[
+\alpha = P_{14,14}\alpha + \sum_{j\in C_2} P_{14,j}.
+\]
+
+\bigskip
+
+\textbf{En isolant \(\alpha\) :}
+\[
+\alpha - P_{14,14}\alpha = \sum_{j\in C_2} P_{14,j}
+\quad\Longleftrightarrow\quad
+\alpha (1 - P_{14,14}) = \sum_{j\in C_2} P_{14,j}
+\quad\Longleftrightarrow\quad
+\alpha = \frac{\displaystyle\sum_{j\in C_2} P_{14,j}}{1 - P_{14,14}}.
+\]
+
+\bigskip
+
+On sait que \(P_{14,14} = 0.4\).
+
+De plus :
+\[
+\sum_{j\in C_2} P_{14,j}
+= P_{14,5} + P_{14,12} + P_{14,21} + P_{14,25} + P_{14,2}.
+\]
+
+Comme l’état \(14\) ne pointe directement que vers \(2\) et \(5\) :
+\[
+\sum_{j\in C_2} P_{14,j}
+= P_{14,5} + P_{14,2}
+= 0.1 + 0.2
+= 0.3.
+\]
+
+Ainsi :
+\[
+\alpha = \frac{0.3}{1 - 0.4}
+       = \frac{0.3}{0.6}
+       = \frac12.
+\]
+
+Comme \(\alpha + \beta = 1\), on obtient :
+\[
+\beta = 1 - \alpha = \frac12.
+\]
+
+\[
+\boxed{
+L\Pi_C = \frac12 L\Pi_A + \frac12 L\Pi_B.
+}
+\]
+
+\textbf{Conclusion :} la distribution limite issue de l’état \(14\) est égale à la combinaison linéaire à poids égaux des distributions limites issues de \(2\) et \(8\).
+
+
 
 \subsection*{Question 12 — probabilités d'atteindre les classes finales}
 \phantomsection
