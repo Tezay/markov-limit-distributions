@@ -253,12 +253,14 @@ Donc deux états appartenant à la même classe communicante ont nécessairement
 
 
 \subsection*{Question 14 : Le nombre de distributions limite}
+\phantomsection
+\addcontentsline{toc}{subsection}{Question 14 : Le nombre de distributions limite}
 
 Soient $L$ l'ensemble des distributions limites et $S$ l'ensemble des distributions stationnaires d'une chaîne de Markov finie de matrice de transition $P$.
 
 \subsubsection*{a) Montrer que si $\pi$ est un vecteur stationnaire de $P$, alors pour tout $k \geq 0$, $\pi = \pi P^k$.}
 
-\begin{proof}
+\noindent\textbf{Preuve :}
 Par définition, $\pi$ est stationnaire si $\pi = \pi P$.
 \begin{itemize}
     \item \textbf{Cas de base ($k=0$) :} $\pi P^0 = \pi I = \pi$.
@@ -273,11 +275,11 @@ Par définition, $\pi$ est stationnaire si $\pi = \pi P$.
     $$
 \end{itemize}
 La propriété est vérifiée pour tout $k \geq 0$.
-\end{proof}
+
 
 \subsubsection*{b) Prouver que $L = S$.}
 
-\begin{proof}
+\noindent\textbf{Preuve :}
 Nous démontrons la double inclusion.
 
 \textbf{1. $L \subset S$ (Toute distribution limite est stationnaire) :}
@@ -295,22 +297,22 @@ $$
 $$
 Donc $\pi \in L$.
 Puisque $L \subset S$ et $S \subset L$, nous concluons que $L = S$.
-\end{proof}
+
 
 \subsubsection*{c) Propriétés de $L$ et $S$.}
 
 \textbf{i) $S$ n'est pas un sous-espace vectoriel de $\mathbb{R}^n$}
 
-\begin{proof}
+\noindent\textbf{Preuve :}
 Un vecteur stationnaire $\pi$ est une distribution de probabilité, donc la somme de ses composantes est égale à 1 : $\sum_{i} \pi_i = 1$.
 Le vecteur nul $\mathbf{0}$ ne vérifie pas cette condition puisque $\sum_{i} \mathbf{0}_i = 0 \neq 1$.
 Puisque $S$ ne contient pas l'élément neutre de l'addition vectorielle, $\mathbf{0} \notin S$.
 Donc $S$ n'est pas un sous-espace vectoriel de $\mathbb{R}^n$.
-\end{proof}
+
 
 \textbf{ii) $S$ est un sous-ensemble convexe.}
 
-\begin{proof}
+\noindent\textbf{Preuve :}
 Soient $\pi_1, \pi_2 \in S$ et $\alpha \in [0, 1]$. Considérons $\pi_{\alpha} = \alpha \pi_1 + (1-\alpha) \pi_2$.
 \begin{itemize}
     \item $\pi_{\alpha}$ est une distribution de probabilité : $\sum_{i} \pi_{\alpha, i} = \alpha \sum_{i} \pi_{1, i} + (1-\alpha) \sum_{i} \pi_{2, i} = \alpha(1) + (1-\alpha)(1) = 1$.
@@ -324,11 +326,11 @@ Soient $\pi_1, \pi_2 \in S$ et $\alpha \in [0, 1]$. Considérons $\pi_{\alpha} =
     $$
 \end{itemize}
 Puisque $\pi_{\alpha} \in S$, $S$ est un sous-ensemble convexe.
-\end{proof}
+
 
 \subsubsection*{d) Prouver que toute chaîne de Markov finie admet au moins une distribution stationnaire.}
 
-\begin{proof}
+\noindent\textbf{Preuve :}
 L'équation d'invariance $\pi = \pi P$ est équivalente à $\pi (P - I) = \mathbf{0}$. L'existence d'une solution non nulle $\pi$ est garantie si $\det(P - I) = 0$, c'est-à-dire si $\lambda=1$ est une valeur propre de $P$.
 
 1.  La matrice de transition $P$ est une \textbf{matrice stochastique} (la somme de chaque ligne est 1).
@@ -341,11 +343,11 @@ L'équation d'invariance $\pi = \pi P$ est équivalente à $\pi (P - I) = \mathb
     Ceci montre que $\mathbf{1}$ est un vecteur propre à droite de $P^T$ associé à la valeur propre $\lambda=1$.
 5.  Puisque $\det(A) = \det(A^T)$, les matrices $P$ et $P^T$ ont les mêmes valeurs propres. Donc $\lambda=1$ est aussi une valeur propre de $P$.
 6.  L'espace propre à gauche associé à 1, $\ker(P-I)$, est non trivial. Il contient un vecteur $\pi$ non nul qui peut être normalisé pour obtenir une distribution de probabilité.
-\end{proof}
+
 
 \subsubsection*{e) Montrer qu'une chaîne de Markov réductible admet une infinité de distributions limite.}
 
-\begin{proof}
+\noindent\textbf{Preuve :}
 Une chaîne de Markov réductible, pourvu qu'elle ait au moins deux classes communicantes finales distinctes, $C_1$ et $C_2$, admet des distributions stationnaires $\pi_1$ et $\pi_2$ dont les supports sont disjoints.
 
 1.  L'existence de $\pi_1$ et $\pi_2$ est garantie par la question 14.d) appliquée aux sous-matrices de transition restreintes à chaque classe finale.
@@ -353,11 +355,11 @@ Une chaîne de Markov réductible, pourvu qu'elle ait au moins deux classes comm
 3.  D'après la question 14.c), $S$ est un ensemble \textbf{convexe}.
 4.  Toute combinaison convexe $\pi_{\alpha} = \alpha \pi_1 + (1-\alpha) \pi_2$ avec $\alpha \in [0, 1]$ est également une distribution stationnaire ($\pi_{\alpha} \in S$).
 Puisque l'intervalle $[0, 1]$ contient une infinité de valeurs réelles distinctes, il existe une infinité de distributions stationnaires. Comme $L=S$, la chaîne admet une infinité de distributions limites.
-\end{proof}
+
 
 \subsubsection*{f) Montrer qu'une chaîne irréductible et $d$-périodique $(d \neq 1)$ n'admet pas toujours de distribution limite.}
 
-\begin{proof}
+\noindent\textbf{Preuve :}
 Considérons la chaîne de Markov irréductible et 2-périodique ($d=2$) correspondant au cycle déterministe entre deux états (1 et 2) :
 $$
 P = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}
@@ -371,4 +373,3 @@ Soit la distribution initiale $\Pi(0) = (1, 0)$ (commence en état 1). La séque
 \end{align*}
 La suite $\Pi(n)$ alterne indéfiniment entre $(1, 0)$ et $(0, 1)$. Par définition, la limite $\lim_{n\rightarrow+\infty} \Pi(n)$ n'existe pas.
 Ainsi, une chaîne de Markov irréductible et $d$-périodique ($d \neq 1$) n'admet pas toujours de distribution limite.
-\end{proof}

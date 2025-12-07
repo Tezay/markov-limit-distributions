@@ -87,7 +87,7 @@ Le graphe réduit montre les relations d'accessibilité entre les classes. Les c
 \label{fig:hasse}
 \end{figure}
 
-\paragraph{c) Analyse détaillée par classe (et calcule de leur période\textsuperscript{\ref{lst:compute_period}})}
+\paragraph{c) Analyse détaillée par classe (et calcul de leur période\textsuperscript{\ref{lst:compute_period}})}
 \mbox{}\hfill\\
 
 \noindent
@@ -123,7 +123,7 @@ Le graphe réduit montre les relations d'accessibilité entre les classes. Les c
 \hfill
 \begin{minipage}[t]{0.48\textwidth}
     \textbf{Classe C2 (Finale, Apériodique)} \\
-    Classe \textbf{persistante} (finale) et aperiodique (période 1).
+    Classe \textbf{persistante} (finale) et apériodique (période 1).
     \begin{center}
     \begin{tikzpicture}
         \node[state, c2] (B) at (0,0) {2};
@@ -328,6 +328,8 @@ L'analyse du graphe et des classes permet d'expliquer intuitivement les comporte
 \end{description}
 
 \subsection*{Question 10 : distributions stationnaires de la classe finale non explorée}
+\phantomsection
+\addcontentsline{toc}{subsection}{Question 10 : distributions stationnaires de la classe finale non explorée}
 
 \paragraph{Identification de la classe}
 D'après l'analyse de la structure de la chaîne (Question 8), les classes finales (persistantes) sont $C1, C2, C3$ et $C5$. Les classes $C2$ (Q1-Q3), $C5$ (Q4) et $C3$ (Q6) ayant déjà été étudiées, la classe finale non explorée est la classe $C1$:
@@ -363,9 +365,7 @@ En utilisant les probabilités de transition de la matrice, le système est :
 \pi_1 + \pi_4 + \pi_{11} + \pi_{18} + \pi_{26} + \pi_{27} &= 1 & (7)
 \end{align*}
 
-\paragraph{Calcul et simplification en Annexes \parencite{markovGraphAnalyzer2025}}
-
-\paragraph{Résultat de la distribution stationnaire $\Pi_{C1}$}
+\paragraph{Résultat de la distribution stationnaire $\Pi_{C1}$\textsuperscript{\ref{app:q10_calc}}}
 
 En substituant $\pi_1 = \frac{5}{24}$ dans les expressions trouvées :
 \begin{align*}

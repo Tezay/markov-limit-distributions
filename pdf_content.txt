@@ -1,0 +1,515 @@
+Projet de Probabilités
+Département de Mathématiques
+(en coordination avec le département d’Informatique)
+2025/2026 S3—P2 - P2BDX - P2BN - P2Plus
+Ces notes de cours sont publiées sous la licence
+Creative Commons BY-NC-SA 4.0
+
+Contents
+1Introduction aux chaînes de Markov. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
+1.1 Exemple d’introduction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
+1.2 Le formalisme des chaînes de Markov . . . . . . . . . . . . . . . . . . . . . . . . . . . 6
+1.3 Exemples dans la vie réelle . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 7
+1.4 But du projet . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 7
+2Exploration numérique. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8
+3Explication des résultats expérimentaux. . . . . . . . . . . . . . . . . . . . . . . . 11
+3.1 Les concepts clé . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .11
+3.2 Retour à la châine de Markov à 27 états . . . . . . . . . . . . . . . . . . . . . . . . . . 14
+4Pour aller plus loin. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+4.1 Distributions limites en partant d’états transitoires . . . . . . . . . . . . . . . . . . . . . 15
+4.2 Quelques preuves . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+5Livrable. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 17
+5.1 Rapport . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 17
+5.2 Présentation orale . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 17
+3
+1. Introduction aux chaînes de Markov
+1.1 Exemple d’introduction
+Considérons une horloge détraquée, dotée d’une seule aiguille, qui à chaque heure peut soit avancer
+d’une heure avec une probabilité de 1/2, soit rester sur place avec une probabilité de 1/3, soit reculer
+d’une heure avec une probabilité de 1/6. L’évolution temporelle de cette horloge est un processus
+aléatoire qui peut être représenté par le graphe suivant :
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+1/2
+1/2
+1/2
+1/2
+1/21/2
+1/2
+1/2
+1/2
+1/2
+1/2 1/2
+1/6
+1/6
+1/6
+1/6
+1/6
+1/61/6
+1/6
+1/6
+1/6
+1/6
+1/6 1/3
+1/3
+1/3
+1/3
+1/3
+1/3
+1/3
+1/3
+1/3
+1/3
+1/3
+1/3
+4
+1.1 Exemple d’introduction5
+Les mêmes informations peuvent être représentées sous la forme d’une matrice, appelée lamatrice
+de transitiondu système ou lamatrice d’adjacencedu graphe
+
+
+1
+3
+1
+2 0 0 0 0 0 0 0 0 0 1
+6
+1
+6
+1
+3
+1
+2 0 0 0 0 0 0 0 0 0
+0 1
+6
+1
+3
+1
+2 0 0 0 0 0 0 0 0
+0 0 1
+6
+1
+3
+1
+2 0 0 0 0 0 0 0
+0 0 0 1
+6
+1
+3
+1
+2 0 0 0 0 0 0
+0 0 0 0 1
+6
+1
+3
+1
+2 0 0 0 0 0
+0 0 0 0 0 1
+6
+1
+3
+1
+2 0 0 0 0
+0 0 0 0 0 0 1
+6
+1
+3
+1
+2 0 0 0
+0 0 0 0 0 0 0 1
+6
+1
+3
+1
+2 0 0
+0 0 0 0 0 0 0 0 1
+6
+1
+3
+1
+2 0
+0 0 0 0 0 0 0 0 0 1
+6
+1
+3
+1
+2
+1
+2 0 0 0 0 0 0 0 0 0 1
+6
+1
+3
+
+
+Le coefficient de lai-ème ligne etj-ème colonne représente le poids de l’arête qui va deiversj.
+Un exemple plus simple d’une chaîne de Markov était caché dans l’exercice 2.23 du polycopié du
+cours: à l’instant n∆t la machine peut être en marche ( Fn) ou en panne ( Dn) et les probabilités de
+transition sont données par le graphe ci-dessous
+F D
+a
+b
+1-a 1-b
+Cette chaîne est appelée la chaîne de Markov à deux états. La probabilité que la machine soit
+fonctionnelle à l’instantn∆test
+P(Fn) =P(Fn |Fn−1)P(Fn−1)+P(F n |D n−1)P(Dn−1)
+= (1−a)P(Fn−1)+bP(D n−1)
+De même, La probabilité que la machine soit en panne à l’instantn∆test
+P(Dn) =aP(Fn−1)+(1−b)P(D n−1).
+Le système de ce deux équations peut être écrit de façon plus succincte en utilisant des vecteurs
+colonnes et une matrice carrée :
+
+P(Fn)P(D n)
+
+=
+
+P(Fn−1)P(D n−1)
+ 
+1−a a
+b1−b
+!
+.
+1.2 Le formalisme des chaînes de Markov6
+1.2 Le formalisme des chaînes de Markov
+Par opposition à un système déterministe, unprocessus stochastiqueest utilisé pour décrire la dy-
+namique d’un système (l’aiguille de l’horloge, la machine) qui présente une forme decomportement
+aléatoire: étant donné que le système se trouve dans l’état si au temps t0, on peut au mieux déterminer
+les probabilités Pr(Xt1 =s f
+Xt0 =s i) que le système se trouve dans l’état sf à un instant ultérieur t1.
+Les chaînes de Markov finies sont des processus stochastiques satisfaisant les propriétés suivantes :
+1) Discrétion du temps :le temps est décrit comme un paramètre t prenant des valeurs dans un
+sous-ensemble deN.
+2) Espace d’états fini :l’ensemble de tous les états accessibles au système, appeléespace d’états
+et notéS, est fini.
+3) Propriété de Markov :la probabilité que le système se trouve dans un certain état au temps
+t+1 dépend uniquement de l’état du système au tempst. En d’autres termes, seule l’information
+relative à l’état présent du système est nécessaire pour prédire son comportement futur.
+De plus, une chaîne de Markov finie homogène dans le temps satisfait la propriété suivante :
+4) Homogénéité temporelle :les probabilités de transition pour passer d’un état à un autre en un
+pas sont indépendantes du temps. En d’autres termes, pour toust 1,t2 ∈N ∗, on a
+Pr(Xt1 =j
+Xt1−1 =k) =Pr(Xt2 =j
+Xt2−1 =k).
+Si l’on note n la cardinalité de l’espace d’états S (n=12 dans le premier exemple ci-dessus),
+l’équation fondamentale qui décrit la dynamique d’une chaîne de Markov est
+Pr(Xt =j) =
+n
+∑
+k=1
+Pr(Xt =j
+Xt−1 =k)Pr(X t−1 =k)
+(il s’agit simplement de la formule des probabilités totales). Cette équation peut s’écrire de manière
+beaucoup plus élégante à l’aide des outils de l’algèbre linéaire : si l’on définit
+• levecteur ligne Π(t), appelédistribution de probabilité des états, dont laj-ième composante est
+Pr(Xt =j),
+• lamatrice de transitionP de taille n×n , dont le coefficient de la ligne k et de la colonne j est
+Pr(Xt =j
+Xt−1 =k),
+alors la loi fondamentale des chaînes de Markov devient
+Π(t+1) =Π(t)P .
+Remarques :Comme conséquences immédiates des définitions, on voit que
+⋆Pest une matrice positive telle que la somme des coefficients de chaque ligne est égale à 1 :
+n
+∑
+j=1
+Pjk =
+n
+∑
+j=1
+Pr(X1 =j
+X0 =k) =1.
+1.3 Exemples dans la vie réelle7
+Une matrice satisfaisant ces deux propriétés est appelée unematrice stochastique à droite.
+⋆Pour toutl∈N ∗, la distribution de probabilité des étatslpas après l’instanttest donnée par
+Π(t+l) =Π(t)P l.
+En d’autres termes, le coefficient (Pl)k jdésigne la probabilité que le système se trouve dans
+l’étatk lpas après avoir été dans l’étatj.
+1.3 Exemples dans la vie réelle
+Des exemples de processus dynamiques pouvant être modélisés à l’aide de chaînes de Markov se
+trouvent dans presque tous les domaines :
+• La météo : les états sont « ensoleillé », « nuageux », « pluvieux », etc., et le pas de temps peut
+être de dix minutes.
+• L’évolution à long terme d’un écosystème : les états sont les différentes végétations observées
+dans une zone donnée (par exemple, chênaie, vignobles, herbes, pinède) et le pas de temps peut
+être de dix ans.
+• La position d’un Vélib à Paris : les états sont les différentes stations Vélib de la ville et le pas de
+temps peut être de trente minutes.
+• Les jeux de dés simples comme le jeu des serpents et des échelles : les états sont les différentes
+cases où peut se trouver le pion et le pas de temps correspond à chaque lancer de dé.
+• Les prix des actions à Wall Street : les états sont les différentes valeurs possibles pour une action
+et le pas de temps est d’une seconde.
+• Le mouvement brownien sur un réseau discret (marche aléatoire d’une particule) : les états sont
+les différentes positions possibles de la particule et le pas de temps peut être de la microseconde.
+1.4 But du projet
+Dans ce projet, vous allez explorer le comportement à long terme des chaînes de Markov. Plus
+précisément, étant donnée une chaîne de Markov finie dont la matrice de transition est P, et étant
+donnée une distribution de probabilité initiale Π(0), sous quelles conditions il existe une distribution
+limite lim
+t→+∞
+Π(t) =lim
+t→+∞
+Π(0)Pt ?
+2. Exploration numérique
+V ous allez commencer par explorer “expérimentalement” le comportement à long terme d’une chaîne
+de Markov particulière (et apparemment compliquée). V oici la matrice de transition à 27 états avec
+laquelle vous allez travailler:
+
+
+0 0 0 0.6 0 0 0 0 0 0 0.2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.2
+0 0.3 0 0 0.2 0 0 0 0 0 0 0.4 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0 0
+0 0 0 0 0 0.4 0.3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.3 0 0 0 0
+0.6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.2 0 0 0 0 0 0 0 0.2 0
+0 0.4 0 0 0 0 0 0 0 0 0 0.1 0 0 0 0 0 0 0 0 0.2 0 0 0 0.3 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0
+0 0 0.3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.4 0 0 0.3 0 0 0 0
+0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0.1 0 0 0 0 0 0 0.9 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0.4 0 0 0 0 0 0 0.2 0 0 0.2 0 0.2 0 0 0
+0.5 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0 0 0 0 0 0 0 0 0
+0 0.1 0 0 0.4 0 0 0 0 0 0 0.3 0 0 0 0 0 0 0 0 0.2 0 0 0 0 0 0
+0 0 0.3 0 0 0 0 0 0 0 0 0 0 0 0.7 0 0 0 0 0 0 0 0 0 0 0 0
+0 0.1 0 0 0.2 0 0 0.1 0.1 0 0 0 0 0.4 0 0.1 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0.5 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0
+0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0
+0 0 0 0.5 0 0 0 0 0 0 0.5 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0.1 0 0 0 0 0 0 0 0 0.5 0 0 0.1 0 0.3 0 0 0
+0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0.2 0 0 0.3 0 0 0 0 0 0 0.1 0 0 0 0 0 0 0 0 0.1 0 0 0 0.3 0 0
+0 0 0 0 0 0 0 0 0 0.2 0 0 0 0 0 0.4 0 0 0.2 0 0 0 0 0.2 0 0 0
+0 0 0.3 0 0 0 0.3 0 0 0 0 0 0 0 0 0 0.4 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0.3 0 0 0 0.1 0 0 0 0 0.3 0 0 0.3 0 0 0 0 0
+0 0.2 0 0 0 0 0 0 0 0 0 0.2 0 0 0 0 0 0 0 0 0.5 0 0 0 0.1 0 0
+0 0 0 0.5 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5
+0.5 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0
+
+
+8
+9
+(V ous trouverez sur Moodle un fichier.txt avec les données de la matrice dans le même format que
+vous utilisez pour le projet du coursAlgorithmique et Structures de données 2.)
+Question 1
+On suppose que le système commence dans l’état 2.
+a) Utilisez le fichier matrix.c/matrix.h que vous avez développé dans le projet du coursAlgo-
+rithmique et Structures de données 2pour déterminer la distribution de probabilité des états
+aprèsn=1,n=2,n=10,n=50 pas 1.
+b)Tracez le graphe de la distributionΠ A(n)en fonction den.
+c) Est-ce que, dans cette situation, il existe une distribution limite ? Si oui, vous donnerez les
+valeurs de cette distribution limite.
+Question 2
+On suppose maintenant que le système commence uniformément réparti entre les états 2, 5, 12, 21 et
+25 (c’est-à-dire, P(X0 =2) =P(X0 =5) =P(X0 =12) =P(X0 =21) =P(X0 =25) = 1
+5 ). Est-ce que,
+dans cette situation, il existe une distribution limite ?
+Question 3
+On suppose maintenant que le système commence aléatoirement réparti entre les états 2, 5, 12, 21 et
+25 (c’est-à-dire, P(X0 =2) =a, P(X0 =5) =b, P(X0 =12) =c, P(X0 =21) =d , P(X0 =25) =e et
+a+b+c+d+e=1 ). Est-ce que, dans cette situation, il existe une distribution limite ? Si oui, étudiez
+la dépendance du résultat final en fonction des paramètres initiauxa,b,c,dande.
+Question 4
+Mêmes questions si le système commence dans l’état 8, uniformément réparti entre les états 8, 9 et 16,
+ou aléatoirement réparti entre ces états.
+Question 5
+Mêmes questions si le système commence dans l’état 14, uniformément réparti entre les états 10, 14,
+19, 22 et 24, ou aléatoirement réparti entre ces états.
+Question 6
+Mêmes questions si le système commence dans l’état 6, uniformément réparti entre les états 6, 17 et
+20, ou aléatoirement réparti entre ces états.
+1Si vous n’avez pas encore fini la troisième partie du projet d’Algorithmique et Structure de données 2, ou si votre
+propre programme ne fonctionne pas, alors utilisez Matlab et sa documentation pour les calculs (Help for matrices and
+Help for plots).
+10
+Question 7
+Mêmes questions si le système commence dans l’état 3, uniformément réparti entre les états 3, 7 et 23,
+ou aléatoirement réparti entre ces états.
+3. Explication des résultats expérimentaux
+Dans la section précédente, vous devriez avoir trouvé que parfois la chaîne de Markov admet une
+distribution limite et parfois non, parfois cette distribution limite dépend des valeurs des paramètres et
+parfois non. Dans cette section, nous allons introduire les concepts théoriques qui vous permettront
+rendre compte de cette variété de résultats.
+3.1 Les concepts clé
+• États accessibles :un état j est accessible à partir de l’état k si, en partant de l’état k, il est possible
+d’atteindre l’étatjaprès un certain nombre de pas:
+∃n∈N,Pr(X n =j
+X0 =k) = (Pn)kn ̸=0.
+Remarquez que, puisque(P 0)kk =1, tout état est accessible depuis lui-même.
+•États communicants :les étatsjetkcommuniquent sijest accessible depuisket vice-versa.
+• Classes communicantes :communiquer est une relation d’équivalence sur l’espace des états S, qui
+se décompose donc en classes d’équivalence appelées classes communicantes.
+• Classes successeurs:Soient C1 et C2 deux classes communicantes différentes d’une même chaîne
+de Markov. La classeC 2 est un successeur deC 1 s’il existe des étatsk∈C 1 etl∈C 2 tels que
+Pr(X1 =l
+X0 =k) =Pkl ̸=0.
+11
+3.1 Les concepts clé12
+• Classes transitoires et finales :une classe communicante est finale si elle n’a pas de successeurs.
+Dans le cas contraire, la classe est transitoire. Une fois que le système atteint une classe finale, il ne
+peut pas en sortir. • Période d’un état/d’une classe: Soit un état k∈S et considérez l’ensemble Nkk
+défini par
+Nkk =
+
+n∈N ∗ (Pn)kk ̸=0
+	
+.
+En d’autres mots, un entier naturel n appartient à Nkk s’il est possible deretournerà l’état k en n pas.
+Alors, lapériodede l’état k est défini comme le plus grand commun diviseur de tous les éléments de
+Nkk :
+dk :=pgcd(N kk).
+Sid k =1, alors l’état est dit êtreapériodique.
+Deux états communicants ont la même période. Cela permet de parler de la période de la classe
+communicante.
+• Chaînes de Markov (ir)réductibles :une chaîne de Markov est irréductible si elle contient une
+unique classe communicante. Sinon, elle est appelée réductible.
+• Graphe réduit d’une chaîne de Markov réductible :étant donnée une chaîne de Markov réductible,
+son graphe réduit (appelé aussidiagramme de Hasse) est le graphe de la relation de succession entre
+classes communicantes. Autrement dit, les sommets du graphe sont les classes et il existe une arête
+depuisC k versC l si et seulement siC l est un successeur deC k.
+• Distribution stationnaire :Étant donnée une chaîne de Markov finie avec matrice de transition P,
+une distribution de probabilitéΠest stationnaire si elle satisfait
+Π=ΠP.
+(En d’autres mots, (la transposée de) Π est un vecteur propre de (la transposée de) P associé à la valeur
+propre 1.)
+• Distribution limite :Étant donnée une chaîne de Markov finie avec matrice de transition P, une
+distribution de probabilité Π est une distribution limite s’il existe une distribution initiale Π(0) telle
+que
+Π=lim
+n→+∞
+Π0 Pn.
+3.1 Les concepts clé13
+EXEMPLE:
+Considérez la chaîne de Markov définie par la matrice de transition suivante:
+P=
+
+
+0 1 0 0 0 0 0 0 0
+0 0 1 0 0 0 0 0 0
+1/3 0 0 0 2/3 0 0 0 0
+0 0 0 0 0 1/2 0 1/4 1/4
+0 0 0 0 0 0 1 0 0
+0 0 0 0 0 1/2 0 0 1/2
+0 0 1 0 0 0 0 0 0
+0 1 0 0 0 0 0 0 0
+0 0 0 1 0 0 0 0 0
+
+
+Remarquez que la somme des coefficients de n’importe quelle ligne est bien éagle à 1. Le graphe de
+la chaîne de Markov est
+23
+5 7
+1 8
+4
+6 91
+2/3
+1/3
+1
+1
+1
+1 1/4
+1/2
+1/2
+1/4
+1
+1/2
+La chaîne est réductible puisqu’elle contient trois classes communicantes{1,2,3,5,7} , {4,6,9} et {8}.
+{8} est le seul successeur de {4,6,9} , tandis que {1,2,3,5,7} est le seul successeur de {8}. Ainsi, les
+classes {4,6,9} et {8} sont transitoires et la classe {1,2,3,5,7} est finale. Le graphe réduit de cette
+chaîne de Markov est :
+{1,2,3,5,7} {8} {4,6,9}.
+Si l’on se concentre sur la classe{4,6,9}, on a
+N44 =
+
+2,3,4,5,6,...},
+N66 =
+
+1,2,3,4,5,6,...},
+N99 =
+
+2,3,4,5,6,...}.
+Par conséquent, la classe est apériodique. Par ailleurs, pour la classe{1,2,3,5,7}, on a :
+N11 =N 22 =N 33 =N 55 =N 77 =
+
+3,6,9,12,...}.
+Donc, cette classe est 3-périodique.
+3.2 Retour à la châine de Markov à 27 états14
+3.2 Retour à la châine de Markov à 27 états
+Question 8
+Appliquez à la chaîne de 27 états de la section précédente les programmes développés dans la partie 2
+du projet d’Algorithmique et structures de données 2, afin de
+a)Identifier les différentes classes communicantes.
+b)Tracer le graphe réduit (diagramme de Hasse) de la chaîne de Markov.
+c) Pour chaque classe, déterminer si la classe est transitoire ou finale, tracer le graphe de la classe
+et calculer sa période.
+Question 9
+Interprétez les réponses aux questions 1 à 7 en utilisant ce que vous avez appris à la question précédente.
+Question 10
+Une seule classe finale n’a pas été explorée dans les questions 1 à 7. Trouvez l’ensemble de toutes les
+distributions stationnaires de cette classe.
+4. Pour aller plus loin
+4.1 Distributions limites en partant d’états transitoires
+Question 11
+On note LΠA, LΠB et LΠC les distributions limites obtenues en partant respectivement depuis l’état 2,
+l’état 8 et l’état 14. Prouvez queLΠ C est une combinaison linéaire des deux autres distributions:
+∃(α,β)∈R 2,LΠC =αLΠ A +βLΠ B.
+Pouvez-vous donner une interprétation, en termes de probabilités, des coefficientsαetβ?
+Pouvez-vous retrouver les valeurs exactes de α et β par un calcul théorique (i.e., sans utiliser un
+ordinateur)?
+Question 12
+Soit s un état et Ck une classe communicante finale. On note s→C k l’évènement : “le système part
+de l’état s et rentre dans la classe Ck”. Pour chacun des états 10, 19, 22, 24, calculez à la main une
+estimation des valeurs de P(s→C k) (pour toutes les classes finales), puis trouvez la valeur “exacte”
+grâce à l’ordinateur.
+4.2 Quelques preuves
+Question 13–La période d’une classe communicante
+Prouvez que deux états appartenant à la même classe communicante ont nécessairement la même
+période.
+15
+4.2 Quelques preuves16
+Question 14–Le nombre de distributions limite
+Considérez une chaîne de Markov à n états. Soient L⊂R n et S⊂R n respectivement l’ensemble des
+distributions limite et l’ensemble des distributions stationnaires.
+a)Prouvez queL=S.
+b)Un sous-ensembleEdeR n est convexe si
+∀(u,v)∈E,∀α∈[0,1],αu+(1−α)v∈E.
+Prouvez que L n’est pas un sous-espace vectoriel de Rn, mais que c’est bien un sous-ensemble
+convexe.
+c) En utilisant uniquement les concepts de votre cours d’Algèbre linéaire du semestre dernier, prou-
+vez que une chaîne de Markov finie et irréductible admet au moins une distribution stationnaire.
+d) Utilisez les deux questions précédents pour prouver qu’une chaîne de Markov réductible admet
+une infinité de distributions limite.
+e) Prouvez qu’une chaîne de Markov irréductible etd-périodique (avec d̸=1 ) n’admet pas toujours
+de distribution limite.
+f) Cherchez une preuve (et essayez de la comprendre en détail!) que, pour une chaîne de Markov
+finie, irréductible et apériodique, il existe une unique distribution limite et que celle-ci existe
+quelque soit la distribution initiale.
+5. Livrable
+Le projet sera réalisé en équipes de trois à cinq étudiants. Il doit y avoir au maximum huit équipes par
+groupe de TD. V ous avez jusqu’au dimanche 23 novembre pour enregistrer vos équipes dans la section
+dédiée sur Moodle. Les étudiants n’appartenant à aucune équipe après cette date devront travailler
+seuls et auront une note maximale de 10/20.
+5.1 Rapport
+Chaque équipe doit remettre un rapport écrit de 20 pages maximum, répondant aux questions des
+sections précédentes. L’évaluation prendra en compte la présentation (l’usage de LaTeX est encouragé),
+la qualité des figures présentées, la concision des réponses et des interprétations.
+La date limite de dépôt du rapport (via Moodle) est le samedi 6 décembre à 23h59. Tout retard sera
+lourdement sanctionné.
+5.2 Présentation orale
+La présentation orale prendra la forme d’un cours de 10 à 15 minutes sur l’existence des distributions
+limites dans les chaînes de Markov. Elle ne doit pas être une répétition du rapport, mais une synthèse
+de ce que vous avez compris en travaillant sur ce projet. V ous devez fournir de nouveaux exemples et
+exécuter vos programmes pour illustrer votre exposé.
+17
+5.2 Présentation orale18
+Des diapositives sont attendues pour cet exposé. Bien entendu, elles ne doivent contenir aucun
+texte manuscrit ou photographié. Toutes les formules et matrices doivent être saisies au clavier. La
+pédagogie et la clarté seront valorisées.
+À la fin de la présentation, il y aura 15 minutes de questions : chaque étudiant pourra être interrogé
+individuellement sur le projet ou sur un point du cours.
+
