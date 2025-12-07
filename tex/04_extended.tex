@@ -258,26 +258,7 @@ Donc deux états appartenant à la même classe communicante ont nécessairement
 
 Soient $L$ l'ensemble des distributions limites et $S$ l'ensemble des distributions stationnaires d'une chaîne de Markov finie de matrice de transition $P$.
 
-\subsubsection*{a) Montrer que si $\pi$ est un vecteur stationnaire de $P$, alors pour tout $k \geq 0$, $\pi = \pi P^k$.}
-
-\noindent\textbf{Preuve :}
-Par définition, $\pi$ est stationnaire si $\pi = \pi P$.
-\begin{itemize}
-    \item \textbf{Cas de base ($k=0$) :} $\pi P^0 = \pi I = \pi$.
-    \item \textbf{Cas $k=1$} : $\pi P^1 = \pi P = \pi$.
-    \item \textbf{Preuve par récurrence :} Supposons que $\pi = \pi P^k$ pour un certain $k \geq 1$. Alors pour $k+1$ :
-    $$
-    \pi P^{k+1} = \pi (P^k P) = (\pi P^k) P
-    $$
-    En utilisant l'hypothèse de récurrence ($\pi P^k = \pi$) :
-    $$
-    \pi P^{k+1} = \pi P = \pi
-    $$
-\end{itemize}
-La propriété est vérifiée pour tout $k \geq 0$.
-
-
-\subsubsection*{b) Prouver que $L = S$.}
+\subsubsection*{a) Prouver que $L = S$.}
 
 \noindent\textbf{Preuve :}
 Nous démontrons la double inclusion.
@@ -290,7 +271,7 @@ $$
 Donc $\pi$ vérifie $\pi = \pi P$, ce qui signifie $\pi \in S$.
 
 \textbf{2. $S \subset L$ (Toute distribution stationnaire est limite) :}
-Soit $\pi \in S$. D'après la question 14.a), nous savons que $\pi P^k = \pi$ pour tout $k \geq 0$.
+Soit $\pi \in S$. $\pi P^k = \pi$ pour tout $k \geq 0$.
 En choisissant la distribution initiale $\Pi(0) = \pi$, la limite est :
 $$
 \lim_{k\rightarrow+\infty} \Pi(0) P^k = \lim_{k\rightarrow+\infty} \pi P^k = \lim_{k\rightarrow+\infty} \pi = \pi
@@ -299,7 +280,7 @@ Donc $\pi \in L$.
 Puisque $L \subset S$ et $S \subset L$, nous concluons que $L = S$.
 
 
-\subsubsection*{c) Propriétés de $L$ et $S$.}
+\subsubsection*{b) Propriétés de $L$ et $S$.}
 
 \textbf{i) $S$ n'est pas un sous-espace vectoriel de $\mathbb{R}^n$}
 
@@ -328,7 +309,7 @@ Soient $\pi_1, \pi_2 \in S$ et $\alpha \in [0, 1]$. Considérons $\pi_{\alpha} =
 Puisque $\pi_{\alpha} \in S$, $S$ est un sous-ensemble convexe.
 
 
-\subsubsection*{d) Prouver que toute chaîne de Markov finie admet au moins une distribution stationnaire.}
+\subsubsection*{c) Prouver que toute chaîne de Markov finie admet au moins une distribution stationnaire.}
 
 \noindent\textbf{Preuve :}
 L'équation d'invariance $\pi = \pi P$ est équivalente à $\pi (P - I) = \mathbf{0}$. L'existence d'une solution non nulle $\pi$ est garantie si $\det(P - I) = 0$, c'est-à-dire si $\lambda=1$ est une valeur propre de $P$.
@@ -345,7 +326,7 @@ L'équation d'invariance $\pi = \pi P$ est équivalente à $\pi (P - I) = \mathb
 6.  L'espace propre à gauche associé à 1, $\ker(P-I)$, est non trivial. Il contient un vecteur $\pi$ non nul qui peut être normalisé pour obtenir une distribution de probabilité.
 
 
-\subsubsection*{e) Montrer qu'une chaîne de Markov réductible admet une infinité de distributions limite.}
+\subsubsection*{d) Montrer qu'une chaîne de Markov réductible admet une infinité de distributions limite.}
 
 \noindent\textbf{Preuve :}
 Une chaîne de Markov réductible, pourvu qu'elle ait au moins deux classes communicantes finales distinctes, $C_1$ et $C_2$, admet des distributions stationnaires $\pi_1$ et $\pi_2$ dont les supports sont disjoints.
@@ -357,7 +338,7 @@ Une chaîne de Markov réductible, pourvu qu'elle ait au moins deux classes comm
 Puisque l'intervalle $[0, 1]$ contient une infinité de valeurs réelles distinctes, il existe une infinité de distributions stationnaires. Comme $L=S$, la chaîne admet une infinité de distributions limites.
 
 
-\subsubsection*{f) Montrer qu'une chaîne irréductible et $d$-périodique $(d \neq 1)$ n'admet pas toujours de distribution limite.}
+\subsubsection*{e) Montrer qu'une chaîne irréductible et $d$-périodique $(d \neq 1)$ n'admet pas toujours de distribution limite.}
 
 \noindent\textbf{Preuve :}
 Considérons la chaîne de Markov irréductible et 2-périodique ($d=2$) correspondant au cycle déterministe entre deux états (1 et 2) :
@@ -373,3 +354,41 @@ Soit la distribution initiale $\Pi(0) = (1, 0)$ (commence en état 1). La séque
 \end{align*}
 La suite $\Pi(n)$ alterne indéfiniment entre $(1, 0)$ et $(0, 1)$. Par définition, la limite $\lim_{n\rightarrow+\infty} \Pi(n)$ n'existe pas.
 Ainsi, une chaîne de Markov irréductible et $d$-périodique ($d \neq 1$) n'admet pas toujours de distribution limite.
+
+
+\subsubsection*{f) Cherchez une preuve qu'il existe une unique distribution limite, indépendante de la distribution initiale, pour une chaîne finie, irréductible et apériodique.}
+
+\noindent\textbf{Preuve Simplifiée :}
+Une chaîne de Markov est dite \textbf{ergodique} si elle est à la fois \textbf{irréductible} et \textbf{apériodique}. Le théorème stipule que pour une chaîne ergodique, la distribution $\Pi(n)$ converge vers une distribution $\pi$ unique, indépendamment de la distribution initiale $\Pi(0)$.
+
+\begin{enumerate}
+    \item \textbf{Unicité de la Distribution Stationnaire ($\pi$)}
+    \begin{itemize}
+        \item L'existence de $\pi$ ($\pi = \pi P$) est toujours garantie (car $\lambda=1$ est une valeur propre de $P$).
+        \item L'**irréductibilité** garantit que l'espace propre associé à $\lambda=1$ est de dimension 1. Le vecteur stationnaire $\pi$ (après normalisation) est donc **unique**.
+    \end{itemize}
+
+    \item \textbf{Convergence de la Matrice de Transition ($P^n$)}
+    \begin{itemize}
+        \item L'irréductibilité et l'apériodicité impliquent que $P$ est une \textbf{matrice primitive}.
+        \item Le Théorème de Perron-Frobenius assure que la valeur propre dominante est $\lambda_1 = 1$ et que toutes les autres valeurs propres $\lambda_k$ ont $|\lambda_k| < 1$.
+        \item Par conséquent, la matrice $P^n$ converge vers une matrice limite $W$ de rang 1 :
+        $$
+        \lim_{n\rightarrow+\infty} P^n = W
+        $$
+        \item Toutes les lignes de $W$ sont égales au vecteur stationnaire unique $\pi$.
+    \end{itemize}
+
+    \item \textbf{Indépendance de la Distribution Initiale}
+    \begin{itemize}
+        \item La limite de la distribution $\Pi(n)$ est donnée par :
+        $$
+        \lim_{n\rightarrow+\infty} \Pi(n) = \Pi(0) W
+        $$
+        \item En utilisant la propriété de $W$ (toutes les lignes sont $\pi$) et le fait que $\Pi(0)$ est un vecteur de probabilité ($\sum \Pi_i = 1$) :
+        $$
+        \Pi(0) W = \sum_{i} \Pi_i \cdot \pi = \left(\sum_{i} \Pi_i\right) \pi = 1 \cdot \pi = \pi
+        $$
+    \end{itemize}
+\end{enumerate}
+    \textbf{Conclusion :} La distribution limite est $\pi$, et elle est unique et indépendante de $\Pi(0)$.
