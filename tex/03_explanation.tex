@@ -343,15 +343,17 @@ Nous déterminons la distribution stationnaire par $\Pi_{C1} = (\pi_1, \pi_4, \p
 
 En extrayant les transitions de la classe $C1$, la sous-matrice de transition $M_{C1}$ est :
 $$ M_{C1} = 
-\begin{pmatrix}
+\begin{blockarray}{ccccccc}
  & 1 & 4 & 11 & 18 & 26 & 27 \\
+\begin{block}{c(cccccc)}
 1 & 0 & 0 & 0 & 0.20 & 0.20 & 0.60 \\
 4 & 0 & 0 & 0.50 & 0 & 0 & 0.50 \\
 11 & 0 & 0.50 & 0 & 0.50 & 0 & 0 \\
 18 & 0 & 0 & 0.50 & 0 & 0 & 0.50 \\
 26 & 0.50 & 0.50 & 0 & 0 & 0 & 0 \\
 27 & 0.50 & 0 & 0 & 0 & 0.50 & 0 \\
-\end{pmatrix}
+\end{block}
+\end{blockarray}
 $$
 
 En utilisant les probabilités de transition de la matrice, le système est :
