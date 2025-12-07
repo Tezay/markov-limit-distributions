@@ -251,16 +251,49 @@ $$d(i) = d(j)$$
 Donc deux états appartenant à la même classe communicante ont nécessairement la même période.
 
 
+\section*{Question 14 : Distribution limite de la chaîne entière}
 
-\subsection*{Question 14 — distributions limites et stationnaires}
-\phantomsection
-\addcontentsline{toc}{subsection}{Question 14 — distributions limites et stationnaires}
-\begin{itemize}[label=\textbullet]
-  \item Montrer que l'ensemble des distributions limites \(L\) coïncide avec l'ensemble des distributions stationnaires \(S\).
-  \item Discuter la convexité de \(L\).
-  \item Prouver l'existence d'au moins une distribution stationnaire pour une chaîne finie irréductible.
-  \item Démontrer qu'une chaîne réductible admet une infinité de distributions limites.
-  \item Expliquer pourquoi une chaîne irréductible \(d\)-périodique (avec \(d\neq 1\)) peut ne pas admettre de distribution limite.
-  \item Citer/comprendre une preuve d'unicité de la distribution limite pour une chaîne finie, irréductible et apériodique.
+\paragraph{Théorème de Décomposition}
+La chaîne de Markov à 27 états est réductible et comporte des états transitoires $T$ et des classes finales $F = \{C1, C2, C3, C5\}$. La distribution limite $\Pi^*$ est donnée par la somme pondérée des distributions stationnaires ($\Pi_C$) des classes finales, où les poids $a_C$ représentent la probabilité d'absorption dans la classe $C$ :
+$$\Pi^* = \sum_{C \in F} a_C \cdot \Pi_C$$
+avec la condition de normalisation : $a_{C1} + a_{C2} + a_{C3} + a_{C5} = 1$.
+
+\paragraph{Rappel des Composantes et des Distributions Stationnaires}
+
+Nous utilisons les distributions stationnaires uniques des classes finales :
+\begin{itemize}
+    \item $\Pi_{C1} = \left( \frac{5}{24}, \frac{7}{48}, \frac{1}{8}, \frac{5}{48}, \frac{1}{6}, \frac{1}{4} \right)$ sur $\{1, 4, 11, 18, 26, 27\}$ (Q10).
+    \item $\Pi_{C3} = \left( \frac{1}{3}, \frac{1}{3}, \frac{1}{3} \right)$ sur $\{6, 17, 20\}$ (Q6).
+    \item Les valeurs numériques de $\Pi_{C2}$ (sur $\{2, 5, 12, 21, 25\}$) et $\Pi_{C5}$ (sur $\{8, 9, 16\}$) sont celles obtenues par convergence (Q3 et Q4).
 \end{itemize}
-\placeholder{Structurer les preuves de façon concise, en renvoyant aux références appropriées.}
+
+\paragraph{Construction de la Distribution Limite $\Pi^*$}
+
+La distribution $\Pi^*$ est un vecteur de dimension 27. Ses composantes sont définies par la formule $\Pi^*(i) = a_C \cdot \Pi_C(i)$ si $i \in C$, et $\Pi^*(i) = 0$ si $i \in T$.
+
+\begin{enumerate}
+    \item \textbf{Composantes de la classe $C1$} : (États $1, 4, 11, 18, 26, 27$)
+    \begin{align*}
+    \Pi^*(1) &= a_{C1} \cdot \frac{5}{24} & \Pi^*(4) &= a_{C1} \cdot \frac{7}{48} & \Pi^*(11) &= a_{C1} \cdot \frac{1}{8} \\
+    \Pi^*(18) &= a_{C1} \cdot \frac{5}{48} & \Pi^*(26) &= a_{C1} \cdot \frac{1}{6} & \Pi^*(27) &= a_{C1} \cdot \frac{1}{4}
+    \end{align*}
+
+    \item \textbf{Composantes de la classe $C2$} : (États $2, 5, 12, 21, 25$)
+    \begin{align*}
+    \Pi^*(2) &\approx a_{C2} \cdot 0.1198 & \Pi^*(5) &\approx a_{C2} \cdot 0.0977 \\
+    \Pi^*(12) &\approx a_{C2} \cdot 0.1169 & \Pi^*(21) &\approx a_{C2} \cdot 0.0898 \\
+    \Pi^*(25) &\approx a_{C2} \cdot 0.0758
+    \end{align*}
+    
+    \item \textbf{Composantes de la classe $C3$} : (États $6, 17, 20$)
+    $$ \Pi^*(6) = a_{C3} \cdot \frac{1}{3} \quad \Pi^*(17) = a_{C3} \cdot \frac{1}{3} \quad \Pi^*(20) = a_{C3} \cdot \frac{1}{3} $$
+
+    \item \textbf{Composantes de la classe $C5$} : (États $8, 9, 16$)
+    $$ \Pi^*(8) \approx a_{C5} \cdot 0.1607 \quad \Pi^*(9) \approx a_{C5} \cdot 0.1786 \quad \Pi^*(16) \approx a_{C5} \cdot 0.1607 $$
+    
+    \item \textbf{États Transitoires ($i \in T$)} :
+    $$ \Pi^*(i) = 0 $$
+    (Pour $i \in \{3, 7, 10, 13, 15, 19, 22, 23, 24\}$)
+\end{enumerate}
+
+La distribution limite $\Pi^*$ est le vecteur complet de dimension 27 contenant ces valeurs.

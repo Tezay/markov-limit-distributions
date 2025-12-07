@@ -363,53 +363,7 @@ En utilisant les probabilités de transition de la matrice, le système est :
 \pi_1 + \pi_4 + \pi_{11} + \pi_{18} + \pi_{26} + \pi_{27} &= 1 & (7)
 \end{align*}
 
-\paragraph{Calcul et simplification}
-
-Nous exprimons toutes les probabilités en fonction de $\pi_1$.
-
-\begin{enumerate}[label=\textbf{Étape \arabic*}]
-    \item \textbf{Détermination de $\pi_{26}$ et $\pi_{27}$ en fonction de $\pi_1$}
-
-    \textbullet\ On réécris (1) et (5) :
-    $$ (1) \implies \pi_{27} = 2 \pi_1 - \pi_{26} $$
-    $$ (5) \implies \pi_{26} = 0.2 \pi_1 + 0.5 \pi_{27} $$
-    \textbullet\ Substituons $\pi_{27}$ dans (5) :
-    \begin{align*}
-    \pi_{26} &= 0.2 \pi_1 + 0.5 (2 \pi_1 - \pi_{26}) \\
-    \pi_{26} &= 0.2 \pi_1 + 1.0 \pi_1 - 0.5 \pi_{26} \\
-    1.5 \pi_{26} &= 1.2 \pi_1 \\
-    \pi_{26} &= \frac{1.2}{1.5} \pi_1 = 0.8 \pi_1 \quad \left( \text{soit } \frac{4}{5}\pi_1 \right)
-    \end{align*}
-    \textbullet\ Retrouvons $\pi_{27}$ avec (1) :
-    $$ \pi_{27} = 2 \pi_1 - 0.8 \pi_1 = 1.2 \pi_1 \quad \left( \text{soit } \frac{6}{5}\pi_1 \right) $$
-
-    \item \textbf{Détermination de $\pi_{11}$ et $\pi_{18}$ en fonction de $\pi_1$}
-
-    \textbullet\ On réécris (6) en utilisant $\pi_{27} = 1.2 \pi_1$ :
-    \begin{align*}
-    1.2 \pi_1 &= 0.6 \pi_1 + 0.5 (\pi_4 + \pi_{18}) \\
-    0.6 \pi_1 &= 0.5 (\pi_4 + \pi_{18}) \\
-    \pi_4 + \pi_{18} &= 1.2 \pi_1 \quad (A)
-    \end{align*}
-    \textbullet\ Utilisons (3) et l'équation (A) :
-    $$ \pi_{11} = 0.5 (\pi_4 + \pi_{18}) = 0.5 (1.2 \pi_1) = 0.6 \pi_1 \quad \left( \text{soit } \frac{3}{5}\pi_1 \right) $$
-    \textbullet\ Utilisons (4) avec $\pi_{11} = 0.6 \pi_1$ :
-    $$ \pi_{18} = 0.2 \pi_1 + 0.5 (0.6 \pi_1) = 0.2 \pi_1 + 0.3 \pi_1 = 0.5 \pi_1 \quad \left( \text{soit } \frac{1}{2}\pi_1 \right) $$
-
-    \item \textbf{Détermination de $\pi_4$ en fonction de $\pi_1$}
-
-    \textbullet\ Utilisons l'équation (A) :
-    $$ \pi_4 + 0.5 \pi_1 = 1.2 \pi_1 $$
-    $$ \pi_4 = 1.2 \pi_1 - 0.5 \pi_1 = 0.7 \pi_1 \quad \left( \text{soit } \frac{7}{10}\pi_1 \right) $$
-
-    \item \textbf{Normalisation}
-
-    \textbullet\ Substituons toutes les valeurs dans l'équation de normalisation (7) :
-    $$ \pi_1 + 0.7 \pi_1 + 0.6 \pi_1 + 0.5 \pi_1 + 0.8 \pi_1 + 1.2 \pi_1 = 1 $$
-    $$ (1 + 0.7 + 0.6 + 0.5 + 0.8 + 1.2) \pi_1 = 1 $$
-    $$ 4.8 \pi_1 = 1 $$
-    $$ \pi_1 = \frac{1}{4.8} = \frac{10}{48} = \frac{5}{24} $$
-\end{enumerate}
+\paragraph{Calcul et simplification en Annexes}
 
 \paragraph{Résultat de la distribution stationnaire $\Pi_{C1}$}
 
