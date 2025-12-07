@@ -314,7 +314,7 @@ Puisque $\pi_{\alpha} \in S$, $S$ est un sous-ensemble convexe.
 \noindent\textbf{Preuve :}
 L'équation d'invariance $\pi = \pi P$ est équivalente à $\pi (P - I) = \mathbf{0}$. L'existence d'une solution non nulle $\pi$ est garantie si $\det(P - I) = 0$, c'est-à-dire si $\lambda=1$ est une valeur propre de $P$.
 
-1.  La matrice de transition $P$ est une \textbf{matrice stochastique} (la somme de chaque ligne est 1).
+1.  La matrice de transition $P$ est une \textbf{matrice de Markov}.
 2.  Considérons le vecteur colonne $\mathbf{1} = (1, 1, \dots, 1)^T$.
 3.  La matrice transposée $P^T$ a pour propriété que la somme de ses colonnes est 1.
 4.  Le produit $P^T \mathbf{1}$ donne un vecteur colonne dont chaque composante est la somme d'une colonne de $P^T$, soit une ligne de $P$, qui est 1.
@@ -365,7 +365,7 @@ Une chaîne de Markov est dite \textbf{ergodique} si elle est à la fois \textbf
     \item \textbf{Unicité de la Distribution Stationnaire ($\pi$)}
     \begin{itemize}
         \item L'existence de $\pi$ ($\pi = \pi P$) est toujours garantie (car $\lambda=1$ est une valeur propre de $P$).
-        \item L'**irréductibilité** garantit que l'espace propre associé à $\lambda=1$ est de dimension 1. Le vecteur stationnaire $\pi$ (après normalisation) est donc **unique**.
+        \item L'irréductibilité garantit que l'espace propre associé à $\lambda=1$ est de dimension 1. Le vecteur stationnaire $\pi$ (après normalisation) est donc unique.
     \end{itemize}
 
     \item \textbf{Convergence de la Matrice de Transition ($P^n$)}
